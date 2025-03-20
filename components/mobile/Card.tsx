@@ -72,7 +72,7 @@ const Card = ({
 
   const selectedVariant = card.colorVariations[card.selectedVariantIndex];
 
-  const getTexture = (texture: string) => {
+  const useTextureHandler = (texture: string) => {
     if (!texture) return null;
     const tex = useTexture(texture);
     tex.minFilter = THREE.LinearFilter;
@@ -82,12 +82,12 @@ const Card = ({
     return tex;
   };
 
-  const frontIllustration = getTexture(selectedVariant.illustration.front);
-  const backIllustration = getTexture(selectedVariant.illustration.back);
-  const frontFoil = getTexture(card.foil.front);
-  const backFoil = getTexture(card.foil.back);
-  const frontNormal = getTexture(card.normalMap.front);
-  const backNormal = getTexture(card.normalMap.back);
+  const frontIllustration = useTextureHandler(selectedVariant.illustration.front);
+  const backIllustration = useTextureHandler(selectedVariant.illustration.back);
+  const frontFoil = useTextureHandler(card.foil.front);
+  const backFoil = useTextureHandler(card.foil.back);
+  const frontNormal = useTextureHandler(card.normalMap.front);
+  const backNormal = useTextureHandler(card.normalMap.back);
 
   const goldEnvMap = {
     map: useLoader(RGBELoader, "/pretville_cinema_1k.hdr"),
