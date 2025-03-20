@@ -62,7 +62,6 @@ export default function Home() {
           front: "/fern/normal-maps/normal.png",
           back: "/fern/normal-maps/normal.png",
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
@@ -72,9 +71,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
-        inStock: true,
+        link: "",
+        inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
+
       },
       {
         id: 2,
@@ -119,7 +120,6 @@ export default function Home() {
           front: "/oak/foil.png",
           back: "/oak/foil.png",
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
@@ -129,9 +129,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
+        link: "",
         inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
+
       },
       {
         id: 3,
@@ -156,7 +158,6 @@ export default function Home() {
           front: "/wellread/foil/front.png",
           back: "/wellread/foil/back.png",
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
@@ -172,9 +173,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
-        inStock: false,
+        link: "https://www.etsy.com/listing/1852677200/im-well-read-double-sided-mini-bookmark?ls=r&ref=hp_rv-1&content_source=53cd7b6815125246a52314c771e65a9273270ce1%253A1852677200&logging_key=53cd7b6815125246a52314c771e65a9273270ce1%3A1852677200",
+        inStock: true,
         isFlipped: false,
         selectedVariantIndex: 0
+
       },
       {
         id: 4,
@@ -199,7 +202,6 @@ export default function Home() {
           front: "/vangogh/illustration.png",
           back: "/vangogh/illustration.png"
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
@@ -207,9 +209,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has silver-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
+        link: "",
         inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
+
       },
       {
         id: 5,
@@ -234,7 +238,6 @@ export default function Home() {
           front: "",
           back: "",
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any reader and any book!<br /><br />
@@ -244,9 +247,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
+        link: "",
         inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
+
       },
       {
         id: 6,
@@ -271,7 +276,6 @@ export default function Home() {
           front: "",
           back: "",
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
@@ -281,9 +285,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
+        link: "",
         inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
+
       },
       {
         id: 7,
@@ -318,7 +324,6 @@ export default function Home() {
           front: "",
           back: "",
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
@@ -328,9 +333,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
+        link: "",
         inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
+
       },
       {
         id: 8,
@@ -355,7 +362,6 @@ export default function Home() {
           front: "",
           back: "",
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
@@ -365,9 +371,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
+        link: "",
         inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
+
       },
       {
         id: 9,
@@ -392,7 +400,6 @@ export default function Home() {
           front: "",
           back: "",
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
@@ -404,9 +411,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
+        link: "",
         inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
+
       },
       {
         id: 10,
@@ -431,7 +440,6 @@ export default function Home() {
           front: "",
           back: "",
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any book nerd!<br /><br />
@@ -443,9 +451,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
+        link: "",
         inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
+
       },
       {
         id: 11,
@@ -470,7 +480,6 @@ export default function Home() {
           front: "",
           back: "",
         },
-        sheenColor: "",
         info: (
           <p>
             This mini bookmark is the perfect companion for any protagonist OR antagonist!<br /><br />
@@ -482,9 +491,11 @@ export default function Home() {
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
         ),
+        link: "",
         inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
+
       }
     ]
   )

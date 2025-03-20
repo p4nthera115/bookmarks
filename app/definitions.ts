@@ -13,7 +13,7 @@ export type CardType = {
     front: string
     back: string
   }
-  sheenColor: string
+  link: string
   inStock: boolean
   isFlipped: boolean
   selectedVariantIndex: number;

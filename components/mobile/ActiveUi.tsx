@@ -230,7 +230,8 @@ export default function ActiveUi({
 
               <div className="h-full flex flex-row items-center justify-end gap-2">
                 {activeCard?.inStock ? (
-                  <motion.button
+                  <motion.a
+                    href={activeCard.link}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
@@ -242,9 +243,10 @@ export default function ActiveUi({
                       <div className="h-10 flex justify-center items-center">Buy</div>
                       <div className="bg-black text-white h-10 flex justify-center items-center">Buy</div>
                     </div>
-                  </motion.button>
+                  </motion.a>
                 ) : (
                   <motion.button
+                    disabled
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}

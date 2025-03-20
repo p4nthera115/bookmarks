@@ -262,21 +262,23 @@ export default function ActiveUi({
                 </ul>
               </motion.div>
               {activeCard?.inStock ? (
-                <motion.button
+                <motion.a
+                  href={activeCard.link}
+                  target="_blank"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
                   transition={{ delay: 0.4, duration: 0.3 }}
-                  onClick={() => setActive(null)}
                   className="group h-12 w-full rounded-full border-neutral-800 border overflow-hidden"
                 >
                   <div className="flex flex-col group-hover:-translate-y-12 transition duration-300">
                     <div className="h-12 flex justify-center items-center">Buy now</div>
                     <div className="bg-black text-white h-12 flex justify-center items-center">Buy now</div>
                   </div>
-                </motion.button>
+                </motion.a>
               ) : (
                 <motion.button
+                  disabled
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
