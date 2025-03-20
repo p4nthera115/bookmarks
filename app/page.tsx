@@ -456,15 +456,15 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "",
-              back: "",
+              front: "/ant-pro/illustrations/front.png",
+              back: "/ant-pro/illustrations/back.png",
             },
             foilColor: "gold"
           }
         ],
         foil: {
-          front: "",
-          back: ""
+          front: "/ant-pro/foil/front.png",
+          back: "/ant-pro/foil/back.png"
         },
         normalMap: {
           front: "",
