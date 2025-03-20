@@ -66,7 +66,6 @@ const Card = ({
   }, []);
 
   const selectedVariant = card.colorVariations[card.selectedVariantIndex];
-  const normalMap = useTexture("/NormalMap.png")
 
   const getTexture = (texture: string) => {
     if (!texture) return null;
@@ -84,7 +83,6 @@ const Card = ({
   const backFoil = getTexture(card.foil.back);
   const frontNormal = getTexture(card.normalMap.front);
   const backNormal = getTexture(card.normalMap.back);
-
 
   const rotationRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0.7, 0));
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);

@@ -71,7 +71,23 @@ const Card = ({
   const initialPos = useMemo(() => new THREE.Vector3(0, 0, index * dz), [index]);
 
   const selectedVariant = card.colorVariations[card.selectedVariantIndex];
-  const [bookmark, foil, normalMap] = useTexture(["/bookmark.png", "/foil.png", "/NormalMap.png"]);
+
+  const getTexture = (texture: string) => {
+    if (!texture) return null;
+    const tex = useTexture(texture);
+    tex.minFilter = THREE.LinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+    tex.anisotropy = 16;
+    tex.generateMipmaps = true;
+    return tex;
+  };
+
+  const frontIllustration = getTexture(selectedVariant.illustration.front);
+  const backIllustration = getTexture(selectedVariant.illustration.back);
+  const frontFoil = getTexture(card.foil.front);
+  const backFoil = getTexture(card.foil.back);
+  const frontNormal = getTexture(card.normalMap.front);
+  const backNormal = getTexture(card.normalMap.back);
 
   const goldEnvMap = {
     map: useLoader(RGBELoader, "/pretville_cinema_1k.hdr"),
@@ -86,16 +102,6 @@ const Card = ({
   };
 
   const envMap = selectedVariant.foilColor === "gold" ? goldEnvMap : silverEnvMap;
-
-  bookmark.minFilter = THREE.LinearFilter;
-  bookmark.magFilter = THREE.LinearFilter;
-  bookmark.anisotropy = 16;
-  bookmark.generateMipmaps = true;
-
-  foil.minFilter = THREE.LinearFilter;
-  foil.magFilter = THREE.LinearFilter;
-  foil.anisotropy = 16;
-  foil.generateMipmaps = true;
 
   envMap.map.mapping = THREE.EquirectangularReflectionMapping;
 
@@ -157,7 +163,7 @@ const Card = ({
   });
 
   return (
-    <group ref={groupRef} position={initialPos}>
+    <group ref={groupRef} position={initialPos} rotation={[0, 0.7, 0]}>
       {/* BASE CARD */}
       <mesh
         ref={meshRef}
@@ -167,67 +173,92 @@ const Card = ({
         onClick={click}
       >
         <meshPhysicalMaterial color={selectedVariant.cardColor} opacity={1} />
+
         {/* FRONT ILLUSTRATION */}
-        <Decal receiveShadow={active ? false : true} position={[0.02, 0, 0]} scale={[1, 1.75, 0.1]}>
-          <meshPhysicalMaterial
-            polygonOffset
-            polygonOffsetFactor={-1}
-            map={bookmark}
-            roughness={0.9}
-            metalness={0.1}
-            side={THREE.DoubleSide}
-          />
-        </Decal>
+        {
+          frontIllustration ?
+            (
+              <Decal
+                receiveShadow={active ? false : true}
+                scale={[1, 1.75, 0.1]}
+                rotation={[0, 0, Math.PI * 2]}>
+                <meshPhysicalMaterial
+                  polygonOffset
+                  polygonOffsetFactor={-1}
+                  map={frontIllustration}
+                  roughness={0.9}
+                  metalness={0.1}
+                  side={THREE.DoubleSide}
+                />
+              </Decal>
+            ) : null
+        }
+
         {/* BACK ILLUSTRATION */}
-        <Decal
-          receiveShadow={active ? false : true}
-          position={[0, 0, -0.04]}
-          scale={[1, 1.75, 0.1]}
-          rotation={[0, Math.PI, 0]}
-        >
-          <meshPhysicalMaterial
-            polygonOffset
-            polygonOffsetFactor={-1}
-            map={bookmark}
-            roughness={0.9}
-            metalness={0.1}
-            side={THREE.DoubleSide}
-          />
-        </Decal>
+        {
+          backIllustration ? (
+            <Decal
+              receiveShadow={active ? false : true}
+              position={[0, 0, -0.04]}
+              scale={[1, 1.75, 0.1]}
+              rotation={[0, Math.PI, 0]}
+            >
+              <meshPhysicalMaterial
+                polygonOffset
+                polygonOffsetFactor={-1}
+                map={backIllustration}
+                roughness={0.9}
+                metalness={0.1}
+                side={THREE.DoubleSide}
+              />
+            </Decal>
+          ) : null
+        }
       </mesh>
+
+
       {/* FRONT FOIL */}
-      <mesh geometry={planeGeometry} position={[0, 0, 0.03]}>
-        <meshPhysicalMaterial
-          transparent
-          roughness={0.1}
-          metalness={0.8}
-          reflectivity={0.8}
-          sheen={1}
-          map={foil}
-          normalMap={normalMap}
-          normalScale={new THREE.Vector2(0.1, 0.1)}
-          envMap={envMap.map}
-          envMapIntensity={envMap.intensity}
-          envMapRotation={envMap.rotation}
-        />
-      </mesh>
+      {
+        frontFoil ? (
+          <mesh geometry={planeGeometry} position={[0, 0, 0.03]}>
+            <meshPhysicalMaterial
+              transparent
+              roughness={0.1}
+              metalness={0.8}
+              reflectivity={0.8}
+              sheen={1}
+              map={frontFoil}
+              normalMap={frontNormal}
+              normalScale={new THREE.Vector2(0.1, 0.1)}
+              envMap={envMap.map}
+              envMapIntensity={envMap.intensity}
+              envMapRotation={envMap.rotation}
+            />
+          </mesh>
+        ) : null
+      }
+
       {/* BACK FOIL */}
-      <mesh geometry={planeGeometry} rotation={[0, Math.PI, 0]} position={[0, 0, -0.01]}>
-        <meshPhysicalMaterial
-          side={THREE.DoubleSide}
-          transparent
-          roughness={0.1}
-          metalness={0.8}
-          reflectivity={0.8}
-          sheen={1}
-          map={foil}
-          normalMap={normalMap}
-          normalScale={new THREE.Vector2(0.1, 0.1)}
-          envMap={envMap.map}
-          envMapIntensity={envMap.intensity}
-          envMapRotation={envMap.rotation}
-        />
-      </mesh>
+      {
+        backFoil ? (
+          <mesh geometry={planeGeometry} rotation={[0, Math.PI, 0]} position={[0, 0, -0.01]}>
+            <meshPhysicalMaterial
+              side={THREE.DoubleSide}
+              transparent
+              roughness={0.1}
+              metalness={0.8}
+              reflectivity={0.8}
+              sheen={1}
+              map={backFoil}
+              normalMap={backNormal}
+              normalScale={new THREE.Vector2(0.1, 0.1)}
+              envMap={envMap.map}
+              envMapIntensity={envMap.intensity}
+              envMapRotation={envMap.rotation}
+            />
+          </mesh>
+        ) : null
+      }
     </group>
   );
 };
