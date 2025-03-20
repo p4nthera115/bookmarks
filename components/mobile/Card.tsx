@@ -72,22 +72,41 @@ const Card = ({
 
   const selectedVariant = card.colorVariations[card.selectedVariantIndex];
 
-  const useTextureHandler = (texture: string) => {
-    if (!texture) return null;
-    const tex = useTexture(texture);
-    tex.minFilter = THREE.LinearFilter;
-    tex.magFilter = THREE.LinearFilter;
-    tex.anisotropy = 16;
-    tex.generateMipmaps = true;
-    return tex;
-  };
+  const defaultTexturePath = '/bookmark.png';
 
-  const frontIllustration = useTextureHandler(selectedVariant.illustration.front);
-  const backIllustration = useTextureHandler(selectedVariant.illustration.back);
-  const frontFoil = useTextureHandler(card.foil.front);
-  const backFoil = useTextureHandler(card.foil.back);
-  const frontNormal = useTextureHandler(card.normalMap.front);
-  const backNormal = useTextureHandler(card.normalMap.back);
+  const allTexturePaths = [
+    selectedVariant.illustration.front || defaultTexturePath,
+    selectedVariant.illustration.back || defaultTexturePath,
+    card.foil.front || defaultTexturePath,
+    card.foil.back || defaultTexturePath,
+    card.normalMap.front || defaultTexturePath,
+    card.normalMap.back || defaultTexturePath,
+  ];
+
+  const [
+    frontIllustrationTex,
+    backIllustrationTex,
+    frontFoilTex,
+    backFoilTex,
+    frontNormalTex,
+    backNormalTex,
+  ] = useTexture(allTexturePaths);
+
+  [frontIllustrationTex, backIllustrationTex, frontFoilTex, backFoilTex, frontNormalTex, backNormalTex].forEach(tex => {
+    if (tex) {
+      tex.minFilter = THREE.LinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.anisotropy = 16;
+      tex.generateMipmaps = true;
+    }
+  });
+
+  const frontIllustration = selectedVariant.illustration.front ? frontIllustrationTex : null;
+  const backIllustration = selectedVariant.illustration.back ? backIllustrationTex : null;
+  const frontFoil = card.foil.front ? frontFoilTex : null;
+  const backFoil = card.foil.back ? backFoilTex : null;
+  const frontNormal = card.normalMap.front ? frontNormalTex : null;
+  const backNormal = card.normalMap.back ? backNormalTex : null;
 
   const goldEnvMap = {
     map: useLoader(RGBELoader, "/pretville_cinema_1k.hdr"),
