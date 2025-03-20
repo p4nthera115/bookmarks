@@ -85,8 +85,8 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "/oak/illustrations/blue.png",
-              back: "/oak/illustrations/blue.png",
+              front: "",
+              back: "",
             },
             foilColor: "gold"
           },
@@ -95,8 +95,8 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "/oak/illustrations/green.png",
-              back: "/oak/illustrations/green.png",
+              front: "",
+              back: "",
             },
             foilColor: "gold"
           },
@@ -105,19 +105,19 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "/oak/illustrations/orange.png",
-              back: "/oak/illustrations/orange.png",
+              front: "",
+              back: "",
             },
             foilColor: "gold"
           },
         ],
         foil: {
-          front: "",
-          back: ""
+          front: "/oak/foil.png",
+          back: "/oak/foil.png"
         },
         normalMap: {
-          front: "",
-          back: "",
+          front: "/oak/foil.png",
+          back: "/oak/foil.png",
         },
         sheenColor: "",
         info: (
@@ -142,19 +142,19 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "",
-              back: "",
+              front: "/wellread/illustrations/front.png",
+              back: "/wellread/illustrations/back.png",
             },
             foilColor: "gold"
           }
         ],
         foil: {
-          front: "",
-          back: ""
+          front: "/wellread/foil/front.png",
+          back: "/wellread/foil/back.png"
         },
         normalMap: {
-          front: "",
-          back: "",
+          front: "/wellread/foil/front.png",
+          back: "/wellread/foil/back.png",
         },
         sheenColor: "",
         info: (
@@ -185,19 +185,19 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "",
-              back: "",
+              front: "/vangogh/illustration.png",
+              back: "/vangogh/illustration.png",
             },
             foilColor: "silver"
           }
         ],
         foil: {
-          front: "",
-          back: ""
+          front: "/vangogh/foil.png",
+          back: "/vangogh/foil.png"
         },
         normalMap: {
-          front: "",
-          back: ""
+          front: "/vangogh/illustration.png",
+          back: "/vangogh/illustration.png"
         },
         sheenColor: "",
         info: (
@@ -257,15 +257,15 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "",
-              back: "",
+              front: "/fox/illustration.png",
+              back: "/fox/illustration.png",
             },
             foilColor: "gold"
           }
         ],
         foil: {
-          front: "",
-          back: ""
+          front: "/fox/foil.png",
+          back: "/fox/foil.png"
         },
         normalMap: {
           front: "",
@@ -294,8 +294,8 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "",
-              back: "",
+              front: "/snowman/illustration.png",
+              back: "/snowman/illustration.png",
             },
             foilColor: "gold"
           },
@@ -304,15 +304,15 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "",
-              back: "",
+              front: "/snowman/illustration.png",
+              back: "/snowman/illustration.png",
             },
             foilColor: "silver"
           },
         ],
         foil: {
-          front: "",
-          back: ""
+          front: "/snowman/foil.png",
+          back: "/snowman/foil.png",
         },
         normalMap: {
           front: "",
@@ -341,15 +341,15 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "",
-              back: "",
+              front: "/nutcracker/illustration.png",
+              back: "/nutcracker/illustration.png",
             },
             foilColor: "gold"
           }
         ],
         foil: {
-          front: "",
-          back: ""
+          front: "/nutcracker/foil.png",
+          back: "/nutcracker/foil.png"
         },
         normalMap: {
           front: "",
@@ -417,15 +417,15 @@ export default function Home() {
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
-              front: "",
-              back: "",
+              front: "/hello/illustration.png",
+              back: "/hello/illustration.png",
             },
             foilColor: "gold"
           }
         ],
         foil: {
-          front: "",
-          back: ""
+          front: "/hello/foil/front.png",
+          back: "/hello/foil/back.png"
         },
         normalMap: {
           front: "",
