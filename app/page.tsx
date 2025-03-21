@@ -26,7 +26,7 @@ export default function Home() {
           {
             colorName: "Blue",
             cardColor: "#adc8e0",
-            bgColor: "#91b2cf",
+            bgColor: "#728ca3",
             illustration: {
               front: "/fern/illustrations/blue.png",
               back: "/fern/illustrations/blue.png",
@@ -36,7 +36,7 @@ export default function Home() {
           {
             colorName: "Green",
             cardColor: "#50523c",
-            bgColor: "#50523c",
+            bgColor: "#718259",
             illustration: {
               front: "/fern/illustrations/green.png",
               back: "/fern/illustrations/green.png",
@@ -46,7 +46,7 @@ export default function Home() {
           {
             colorName: "Black",
             cardColor: "#2b2826",
-            bgColor: "#2b2826",
+            bgColor: "#675f5a",
             illustration: {
               front: "/fern/illustrations/black.png",
               back: "/fern/illustrations/black.png",
@@ -84,7 +84,7 @@ export default function Home() {
           {
             colorName: "Dark Blue",
             cardColor: "#293348",
-            bgColor: "#91b2cf",
+            bgColor: "#546790",
             illustration: {
               front: "/oak/illustrations/blue.png",
               back: "/oak/illustrations/blue.png",
@@ -142,7 +142,7 @@ export default function Home() {
           {
             colorName: "",
             cardColor: "#fff6e3",
-            bgColor: "#91b2cf",
+            bgColor: "#cdc0a6",
             illustration: {
               front: "/wellread/illustrations/front.png",
               back: "/wellread/illustrations/back.png",
@@ -186,7 +186,7 @@ export default function Home() {
           {
             colorName: "",
             cardColor: "#fff9ef",
-            bgColor: "#91b2cf",
+            bgColor: "#cfc7b7",
             illustration: {
               front: "/vangogh/illustration.png",
               back: "/vangogh/illustration.png",
@@ -260,7 +260,7 @@ export default function Home() {
           {
             colorName: "GOLDEN",
             cardColor: "#d0d2d1",
-            bgColor: "#91b2cf",
+            bgColor: "#f2d2bd",
             illustration: {
               front: "/fox/illustration.png",
               back: "/fox/illustration.png",
@@ -270,7 +270,7 @@ export default function Home() {
           {
             colorName: "SILVER",
             cardColor: "#d0d2d1",
-            bgColor: "#91b2cf",
+            bgColor: "#f2d2bd",
             illustration: {
               front: "/fox/illustration.png",
               back: "/fox/illustration.png",
@@ -308,7 +308,7 @@ export default function Home() {
           {
             colorName: "GOLDEN",
             cardColor: "#e9e9e7",
-            bgColor: "#91b2cf",
+            bgColor: "#ffffff",
             illustration: {
               front: "/snowman/illustration.png",
               back: "/snowman/illustration.png",
@@ -318,7 +318,7 @@ export default function Home() {
           {
             colorName: "SILVER",
             cardColor: "#e9e9e7",
-            bgColor: "#91b2cf",
+            bgColor: "#ffffff",
             illustration: {
               front: "/snowman/illustration.png",
               back: "/snowman/illustration.png",
@@ -356,7 +356,7 @@ export default function Home() {
           {
             colorName: "",
             cardColor: "#dfe3e0",
-            bgColor: "#91b2cf",
+            bgColor: "#9bb5b6",
             illustration: {
               front: "/nutcracker/illustration.png",
               back: "/nutcracker/illustration.png",
@@ -434,7 +434,7 @@ export default function Home() {
           {
             colorName: "",
             cardColor: "#e3d0d2",
-            bgColor: "#91b2cf",
+            bgColor: "#f5d9dc",
             illustration: {
               front: "/hello/illustration.png",
               back: "/hello/illustration.png",
@@ -474,7 +474,7 @@ export default function Home() {
           {
             colorName: "",
             cardColor: "#a3b9ac",
-            bgColor: "#91b2cf",
+            bgColor: "#91ae9d",
             illustration: {
               front: "/ant-pro/illustrations/front.png",
               back: "/ant-pro/illustrations/back.png",
