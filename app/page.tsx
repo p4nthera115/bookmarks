@@ -21,7 +21,7 @@ export default function Home() {
     [
       {
         id: 1,
-        name: "Blue Fern",
+        name: "Fern",
         colorVariations: [
           {
             colorName: "Blue",
@@ -66,7 +66,7 @@ export default function Home() {
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
 
-            My blue fern design is inspired by my love of nature and old books with ornate gold or silver foiling! I&#39;ve always had an eye for detail, so it was a joy to create this intricate design.<br /><br />
+            My fern design is inspired by my love of nature and old books with ornate gold or silver foiling! I&#39;ve always had an eye for detail, so it was a joy to create this intricate design.<br /><br />
 
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
@@ -79,7 +79,7 @@ export default function Home() {
       },
       {
         id: 2,
-        name: "Dark Blue Oak",
+        name: "Oak",
         colorVariations: [
           {
             colorName: "Dark Blue",
@@ -92,7 +92,7 @@ export default function Home() {
             foilColor: "gold"
           },
           {
-            colorName: "green",
+            colorName: "Green",
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
@@ -102,7 +102,7 @@ export default function Home() {
             foilColor: "gold"
           },
           {
-            colorName: "orange",
+            colorName: "Orange",
             cardColor: "#adc8e0",
             bgColor: "#91b2cf",
             illustration: {
@@ -124,7 +124,7 @@ export default function Home() {
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
 
-            My green oak design is inspired by my love of nature and (specifically) one of my favorite types of trees!<br /><br />
+            My oak design is inspired by my love of nature and (specifically) one of my favorite types of trees!<br /><br />
 
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
@@ -255,10 +255,10 @@ export default function Home() {
       },
       {
         id: 6,
-        name: "GOLDEN Fox",
+        name: "Fox",
         colorVariations: [
           {
-            colorName: "",
+            colorName: "GOLDEN",
             cardColor: "#d0d2d1",
             bgColor: "#91b2cf",
             illustration: {
@@ -266,6 +266,16 @@ export default function Home() {
               back: "/fox/illustration.png",
             },
             foilColor: "gold"
+          },
+          {
+            colorName: "SILVER",
+            cardColor: "#d0d2d1",
+            bgColor: "#91b2cf",
+            illustration: {
+              front: "/fox/illustration.png",
+              back: "/fox/illustration.png",
+            },
+            foilColor: "silver"
           }
         ],
         foil: {
@@ -280,7 +290,7 @@ export default function Home() {
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
 
-            My GOLDEN fox design is inspired by my love for (and addiction to buying) adorable ornaments! This fox, in particular is an homage to the fox in my favorite book &#34;The little prince&#34; by Antoine de Saint-Exupery! It was such a joy to paint this illustration, so I hope you love it as much as I do! (The stars make my heart endlessly happy) ✨<br /><br />
+            My Fox design is inspired by my love for (and addiction to buying) adorable ornaments! This fox, in particular is an homage to the fox in my favorite book &#34;The little prince&#34; by Antoine de Saint-Exupery! It was such a joy to paint this illustration, so I hope you love it as much as I do! (The stars make my heart endlessly happy) ✨<br /><br />
 
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>
@@ -293,10 +303,10 @@ export default function Home() {
       },
       {
         id: 7,
-        name: "GOLDEN Snowman",
+        name: "Snowman",
         colorVariations: [
           {
-            colorName: "",
+            colorName: "GOLDEN",
             cardColor: "#e9e9e7",
             bgColor: "#91b2cf",
             illustration: {
@@ -306,7 +316,7 @@ export default function Home() {
             foilColor: "gold"
           },
           {
-            colorName: "",
+            colorName: "SILVER",
             cardColor: "#e9e9e7",
             bgColor: "#91b2cf",
             illustration: {
@@ -328,7 +338,7 @@ export default function Home() {
           <p>
             This mini bookmark is the perfect companion for any reader!<br /><br />
 
-            My GOLDEN Snowman design is inspired by my love for (and addiction to buying) adorable ornaments! Naturally, I couldn&#39;t help but paint a book in his little snowy hands. In my mind, everyone is a reader... even snowmen!<br /><br />
+            My Snowman design is inspired by my love for (and addiction to buying) adorable ornaments! Naturally, I couldn&#39;t help but paint a book in his little snowy hands. In my mind, everyone is a reader... even snowmen!<br /><br />
 
             This mini bookmark is printed on thick high quality paper, has gold-foil accents, and a nice buttery matte finish. It&#39;s also double-sided, so whichever way you place it in your book you&#39;ll have a lovely design to see.
           </p>

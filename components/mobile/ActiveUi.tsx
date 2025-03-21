@@ -46,9 +46,9 @@ export default function ActiveUi({
   }, [cardArr, active]);
 
   const selectedVariantIndex = activeCard?.selectedVariantIndex ?? 0;
-  // const selectedVariant = useMemo(() => {
-  //   return activeCard?.colorVariations[selectedVariantIndex];
-  // }, [activeCard, selectedVariantIndex]);
+  const selectedVariant = useMemo(() => {
+    return activeCard?.colorVariations[selectedVariantIndex];
+  }, [activeCard, selectedVariantIndex]);
 
   const handleClose = useCallback(() => {
     if (activeCard) {
@@ -80,13 +80,6 @@ export default function ActiveUi({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [active, activeCard, flipCard, setActive, handleClose, hasSeenIndicator]);
 
-  // const handlePage = (activeId: number) => {
-  //   if (active && activeCard) {
-  //     setActive(activeId);
-  //     flipCard(active, false);
-  //   }
-  // };
-
   const handleCurrencyClick = (id: number) => {
     const nextActive = id % currencies.length
     console.log(nextActive)
@@ -102,6 +95,8 @@ export default function ActiveUi({
       );
     }
   };
+
+  const nameLength = selectedVariant && activeCard && selectedVariant?.colorName.length + activeCard?.name.length + 1
 
   return (
     <AnimatePresence>
@@ -139,16 +134,32 @@ export default function ActiveUi({
           >
 
             {/* TOP */}
-            <motion.div className="flex flex-row justify-between w-full h-24 p-5 ">
+            <motion.div className="flex flex-row justify-between w-full h-24 p-5">
               <motion.h2
                 key={activeCard?.name}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.3 }}
-                className="text-3xl z-10 flex flex-row "
+                className={`${nameLength && nameLength >= 20 ? "text-xl" : nameLength && nameLength >= 14 ? "text-2xl" : "text-3xl"} z-10 flex flex-row `}
               >
-                {activeCard?.name}
+                <motion.span
+                  layout
+                  key={selectedVariant?.colorName}
+                  initial={{ opacity: 0, }}
+                  animate={{ opacity: 1, }}
+                  exit={{ opacity: 0, }}
+                  transition={{ duration: 0.5, ease: "circInOut" }}
+                  className="pr-2"
+                >
+                  {selectedVariant?.colorName}
+                </motion.span>
+                <motion.span
+                  layout="position"
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  {activeCard?.name}
+                </motion.span>
               </motion.h2>
 
               <motion.button
@@ -161,7 +172,6 @@ export default function ActiveUi({
               </motion.button>
 
             </motion.div>
-            {/* <div className="h-20 w-full z-0 blur-xl absolute"></div> */}
 
             {/* MIDDLE */}
             {activeCard && (
@@ -174,18 +184,35 @@ export default function ActiveUi({
               />
             )}
             <div className="flex justify-center gap-3 mt-auto mb-1 rounded-full ">
-              {activeCard?.colorVariations.map((variant, index) => (
-                <motion.button
-                  key={variant.colorName}
-                  onClick={() => handleVariantClick(index)}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{ delay: 0.4, duration: 0.3 }}
-                  style={{ backgroundColor: variant.cardColor }}
-                  className={`rounded-full border-black/10 border-2 size-4 ${selectedVariantIndex === index ? "ring-1 ring-black" : ""}`}
-                />
-              ))}
+              {activeCard?.colorVariations.map((variant, index) => {
+
+                return variant.colorName === "GOLDEN" || variant.colorName === "SILVER"
+                  ? (
+                    <motion.button
+                      key={variant.colorName}
+                      onClick={() => handleVariantClick(index)}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 5 }}
+                      transition={{ delay: 0.1, duration: 0.3 }}
+                      className={`rounded-full overflow-hidden ${variant.colorName === "GOLDEN" ? "bg-yellow-500" : "bg-slate-300"} border-black/10 border-2 size-4 lg:size-10 ${selectedVariantIndex === index ? "ring-1 ring-black" : ""}`}
+                    >
+                      <div className="bg-white rounded-full size-2 blur-sm"></div>
+                    </motion.button>
+                  )
+                  : (
+                    <motion.button
+                      key={variant.colorName}
+                      onClick={() => handleVariantClick(index)}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 5 }}
+                      transition={{ delay: 0.1, duration: 0.3 }}
+                      style={{ backgroundColor: variant.cardColor }}
+                      className={`rounded-full border-black/10 border-2 size-6 lg:size-10 ${selectedVariantIndex === index ? "ring-1 ring-black" : ""}`}
+                    />
+                  )
+              })}
             </div>
 
             {/* BOTTOM */}
@@ -213,20 +240,6 @@ export default function ActiveUi({
                 </div>
                 <NumberFlow value={activeCurrency.value} />
               </button>
-              {/* <li className="text-2xl font-medium flex justify-between items-center gap-2 ">
-                <div className="flex flex-col text-xs lg:text-xl my-1">
-                  {currencies.map((currency) => (
-                    <button
-                      key={currency.name}
-                      onClick={() => setActiveCurrency(currency)}
-                      className={`${activeCurrency.name === currency.name ? "opacity-100" : "opacity-40"}`}
-                    >
-                      {currency.icon}
-                    </button>
-                  ))}
-                </div>
-                <NumberFlow value={activeCurrency.value} prefix={activeCurrency.symbol} />
-              </li> */}
 
               <div className="h-full flex flex-row items-center justify-end gap-2">
                 {activeCard?.inStock ? (
@@ -251,7 +264,7 @@ export default function ActiveUi({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
                     transition={{ delay: 0.4, duration: 0.3 }}
-                    className="h-12 rounded-full border-black/20 text-black/40 border hover:cursor-not-allowed px-4 justify-center items-center"
+                    className="h-10 rounded-full border-black/20 text-black/40 border hover:cursor-not-allowed px-3 justify-center items-center"
                   >
                     Out of stock
                   </motion.button>

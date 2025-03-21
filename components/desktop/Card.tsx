@@ -208,9 +208,10 @@ const Card = ({
         {/* FRONT ILLUSTRATION */}
         {
           frontIllustration ?
-            (
+            card.name === "Protagonist/Antagonist" ? (
               <Decal
                 receiveShadow={active ? false : true}
+                position={[0, 0, 0.1]}
                 scale={[1, 1.75, 0.1]}
                 rotation={[0, 0, Math.PI * 2]}>
                 <meshPhysicalMaterial
@@ -222,7 +223,22 @@ const Card = ({
                   side={THREE.DoubleSide}
                 />
               </Decal>
-            ) : null
+            ) :
+              (
+                <Decal
+                  receiveShadow={active ? false : true}
+                  scale={[1, 1.75, 0.1]}
+                  rotation={[0, 0, Math.PI * 2]}>
+                  <meshPhysicalMaterial
+                    polygonOffset
+                    polygonOffsetFactor={-1}
+                    map={frontIllustration}
+                    roughness={0.9}
+                    metalness={0.1}
+                    side={THREE.DoubleSide}
+                  />
+                </Decal>
+              ) : null
         }
 
         {/* BACK ILLUSTRATION */}

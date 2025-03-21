@@ -99,6 +99,8 @@ export default function ActiveUi({
     }
   };
 
+  const nameLength = selectedVariant && activeCard && selectedVariant?.colorName.length + activeCard?.name.length + 1
+
   return (
     <AnimatePresence>
       {active !== null && (
@@ -139,11 +141,27 @@ export default function ActiveUi({
                 key={activeCard?.name}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
+                exit={{ opacity: 0, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.3 }}
-                className="text-4xl lg:text-4xl "
+                className={`${nameLength && nameLength >= 20 ? "text-3xl" : "text-4xl"} z-10 flex flex-row `}
               >
-                {activeCard?.name}
+                <motion.span
+                  layout
+                  key={selectedVariant?.colorName}
+                  initial={{ opacity: 0, }}
+                  animate={{ opacity: 1, }}
+                  exit={{ opacity: 0, }}
+                  transition={{ duration: 0.5, ease: "circInOut" }}
+                  className={selectedVariant?.colorName ? "pr-2" : "pr-0"}
+                >
+                  {selectedVariant?.colorName}
+                </motion.span>
+                <motion.span
+                  layout="position"
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  {activeCard?.name}
+                </motion.span>
               </motion.h2>
               <motion.div
                 key={activeCard?.id}
@@ -212,19 +230,35 @@ export default function ActiveUi({
                   </li>
 
                   <li className="flex w-full justify-center gap-6">
-                    {activeCard?.colorVariations.map((variant, index) => (
-                      <motion.button
-                        key={variant.colorName}
-                        onClick={() => handleVariantClick(index)}
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 5 }}
-                        transition={{ delay: 0.1, duration: 0.3 }}
-                        style={{ backgroundColor: variant.cardColor }}
-                        className={`rounded-full border-black/10 border-2 size-6 lg:size-10 ${selectedVariantIndex === index ? "ring-2 ring-black" : ""
-                          }`}
-                      />
-                    ))}
+                    {activeCard?.colorVariations.map((variant, index) => {
+
+                      return variant.colorName === "GOLDEN" || variant.colorName === "SILVER"
+                        ? (
+                          <motion.button
+                            key={variant.colorName}
+                            onClick={() => handleVariantClick(index)}
+                            initial={{ opacity: 0, y: 5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 5 }}
+                            transition={{ delay: 0.1, duration: 0.3 }}
+                            className={`rounded-full overflow-hidden ${variant.colorName === "GOLDEN" ? "bg-yellow-500" : "bg-slate-300"} border-black/10 border-2 size-6 lg:size-10 ${selectedVariantIndex === index ? "ring-2 ring-black" : ""}`}
+                          >
+                            <div className="bg-white rounded-full size-4 mb-4 ml-1 blur-sm"></div>
+                          </motion.button>
+                        )
+                        : (
+                          <motion.button
+                            key={variant.colorName}
+                            onClick={() => handleVariantClick(index)}
+                            initial={{ opacity: 0, y: 5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 5 }}
+                            transition={{ delay: 0.1, duration: 0.3 }}
+                            style={{ backgroundColor: variant.cardColor }}
+                            className={`rounded-full border-black/10 border-2 size-6 lg:size-10 ${selectedVariantIndex === index ? "ring-2 ring-black" : ""}`}
+                          />
+                        )
+                    })}
                   </li>
 
                   <li className="flex justify-between w-full px-2 lg:px-6 text-xs lg:text-base text-end">
@@ -291,7 +325,8 @@ export default function ActiveUi({
             </motion.div>
           </motion.div>
         </div>
-      )}
-    </AnimatePresence>
+      )
+      }
+    </AnimatePresence >
   );
 }
