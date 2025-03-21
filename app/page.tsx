@@ -83,11 +83,11 @@ export default function Home() {
         colorVariations: [
           {
             colorName: "Dark Blue",
-            cardColor: "#adc8e0",
+            cardColor: "#293348",
             bgColor: "#91b2cf",
             illustration: {
-              front: "",
-              back: "",
+              front: "/oak/illustrations/blue.png",
+              back: "/oak/illustrations/blue.png",
             },
             foilColor: "gold"
           },
@@ -141,7 +141,7 @@ export default function Home() {
         colorVariations: [
           {
             colorName: "",
-            cardColor: "#adc8e0",
+            cardColor: "#fff6e3",
             bgColor: "#91b2cf",
             illustration: {
               front: "/wellread/illustrations/front.png",
@@ -185,7 +185,7 @@ export default function Home() {
         colorVariations: [
           {
             colorName: "",
-            cardColor: "#adc8e0",
+            cardColor: "#fff9ef",
             bgColor: "#91b2cf",
             illustration: {
               front: "/vangogh/illustration.png",
@@ -259,7 +259,7 @@ export default function Home() {
         colorVariations: [
           {
             colorName: "",
-            cardColor: "#adc8e0",
+            cardColor: "#d0d2d1",
             bgColor: "#91b2cf",
             illustration: {
               front: "/fox/illustration.png",
@@ -297,7 +297,7 @@ export default function Home() {
         colorVariations: [
           {
             colorName: "",
-            cardColor: "#adc8e0",
+            cardColor: "#e9e9e7",
             bgColor: "#91b2cf",
             illustration: {
               front: "/snowman/illustration.png",
@@ -307,7 +307,7 @@ export default function Home() {
           },
           {
             colorName: "",
-            cardColor: "#adc8e0",
+            cardColor: "#e9e9e7",
             bgColor: "#91b2cf",
             illustration: {
               front: "/snowman/illustration.png",
@@ -345,7 +345,7 @@ export default function Home() {
         colorVariations: [
           {
             colorName: "",
-            cardColor: "#adc8e0",
+            cardColor: "#dfe3e0",
             bgColor: "#91b2cf",
             illustration: {
               front: "/nutcracker/illustration.png",
@@ -423,7 +423,7 @@ export default function Home() {
         colorVariations: [
           {
             colorName: "",
-            cardColor: "#adc8e0",
+            cardColor: "#e3d0d2",
             bgColor: "#91b2cf",
             illustration: {
               front: "/hello/illustration.png",
@@ -463,7 +463,7 @@ export default function Home() {
         colorVariations: [
           {
             colorName: "",
-            cardColor: "#adc8e0",
+            cardColor: "#a3b9ac",
             bgColor: "#91b2cf",
             illustration: {
               front: "/ant-pro/illustrations/front.png",
