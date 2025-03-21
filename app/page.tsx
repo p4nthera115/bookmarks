@@ -59,8 +59,8 @@ export default function Home() {
           back: "/fern/foil/foil.png",
         },
         normalMap: {
-          front: "/fern/normal-maps/normal.png",
-          back: "/fern/normal-maps/normal.png",
+          front: "/fern/normal.png",
+          back: "/fern/normal.png",
         },
         info: (
           <p>
@@ -117,8 +117,8 @@ export default function Home() {
           back: "/oak/foil.png"
         },
         normalMap: {
-          front: "/oak/foil.png",
-          back: "/oak/foil.png",
+          front: "/oak/normal.png",
+          back: "/oak/normal.png",
         },
         info: (
           <p>
@@ -155,8 +155,8 @@ export default function Home() {
           back: "/wellread/foil/back.png"
         },
         normalMap: {
-          front: "/wellread/foil/front.png",
-          back: "/wellread/foil/back.png",
+          front: "/wellread/normals/front.png",
+          back: "/wellread/normals/back.png",
         },
         info: (
           <p>
@@ -199,8 +199,8 @@ export default function Home() {
           back: "/vangogh/foil.png"
         },
         normalMap: {
-          front: "/vangogh/illustration.png",
-          back: "/vangogh/illustration.png"
+          front: "/vangogh/normal.png",
+          back: "/vangogh/normal.png"
         },
         info: (
           <p>
@@ -273,8 +273,8 @@ export default function Home() {
           back: "/fox/foil.png"
         },
         normalMap: {
-          front: "",
-          back: "",
+          front: "/fox/normal.png",
+          back: "/fox/normal.png",
         },
         info: (
           <p>
@@ -321,8 +321,8 @@ export default function Home() {
           back: "/snowman/foil.png",
         },
         normalMap: {
-          front: "",
-          back: "",
+          front: "/snowman/normal.png",
+          back: "/snowman/normal.png",
         },
         info: (
           <p>
@@ -359,8 +359,8 @@ export default function Home() {
           back: "/nutcracker/foil.png"
         },
         normalMap: {
-          front: "",
-          back: "",
+          front: "/nutcracker/normal.png",
+          back: "/nutcracker/normal.png"
         },
         info: (
           <p>
@@ -437,8 +437,8 @@ export default function Home() {
           back: "/hello/foil/back.png"
         },
         normalMap: {
-          front: "",
-          back: "",
+          front: "/hello/normals/front.png",
+          back: "/hello/normals/back.png",
         },
         info: (
           <p>
@@ -477,8 +477,8 @@ export default function Home() {
           back: "/ant-pro/foil/back.png"
         },
         normalMap: {
-          front: "",
-          back: "",
+          front: "/ant-pro/normals/front.png",
+          back: "/ant-pro/normals/back.png",
         },
         info: (
           <p>
