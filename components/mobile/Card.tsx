@@ -61,6 +61,31 @@ const Card = ({
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const rotationRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
   const scroll = useScroll();
+  const [orientation, setOrientation] = useState({ beta: 0, gamma: 0 })
+
+  useEffect(() => {
+    const handleOrientation = (event: DeviceOrientationEvent) => {
+      if (event.beta !== null && event.gamma !== null) {
+        setOrientation({ beta: event.beta, gamma: event.gamma });
+      }
+    };
+
+    window.addEventListener('deviceorientation', handleOrientation);
+
+    return () => window.removeEventListener('deviceorientation', handleOrientation);
+  }, []);
+
+  useEffect(() => {
+    const pointerMove = (e: MouseEvent) => {
+      if (active === id) {
+        const x = (e.clientX / window.innerWidth) * 2 - 1;
+        const y = -(e.clientY / window.innerHeight) * 2 + 1;
+        setMousePos({ x, y });
+      }
+    };
+    window.addEventListener("mousemove", pointerMove);
+    return () => window.removeEventListener("mousemove", pointerMove);
+  }, [active, id]);
 
   // Constants for positioning
   const dz = 1.75 / 2; // Spacing between cards along z-axis
@@ -129,18 +154,6 @@ const Card = ({
     setActive(id)
   };
 
-  useEffect(() => {
-    const pointerMove = (e: MouseEvent) => {
-      if (active === id) {
-        const x = (e.clientX / window.innerWidth) * 2 - 1;
-        const y = -(e.clientY / window.innerHeight) * 2 + 1;
-        setMousePos({ x, y });
-      }
-    };
-    window.addEventListener("mousemove", pointerMove);
-    return () => window.removeEventListener("mousemove", pointerMove);
-  }, [active, id]);
-
   useFrame((state, delta) => {
     if (!groupRef.current) return;
 
@@ -162,13 +175,24 @@ const Card = ({
       targetPosition = [0, 4.5, -0.055];
       smoothTime = 0.35;
       intensity = 0.25;
-      const rotationX = mousePos.y * intensity;
-      const rotationY = mousePos.x * intensity;
+
+      let rotationX, rotationY;
+
+      if (orientation.beta !== null && orientation.gamma !== null) {
+        const sensitivity = 0.5;
+        rotationX = (orientation.beta - 90) * (Math.PI / 180) * sensitivity;
+        rotationY = -orientation.gamma * (Math.PI / 180) * sensitivity;
+      } else {
+        rotationX = mousePos.y * intensity;
+        rotationY = mousePos.x * intensity;
+      }
+
       targetRotation = [
         -Math.PI / 2 - rotationX,
         card.isFlipped ? rotationY + Math.PI : rotationY,
         0,
       ];
+
     } else {
       targetPosition = [0, targetY, targetZ];
       smoothTime = 0.15;
