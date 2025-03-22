@@ -62,6 +62,8 @@ const Card = ({
   const rotationRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
   const scroll = useScroll();
   const [orientation, setOrientation] = useState({ beta: 0, gamma: 0 })
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
 
   useEffect(() => {
     const handleOrientation = (event: DeviceOrientationEvent) => {
@@ -178,8 +180,8 @@ const Card = ({
 
       let rotationX, rotationY;
 
-      if (orientation.beta !== null && orientation.gamma !== null) {
-        rotationX = -(orientation.beta) * (Math.PI / 180) * 0.2;
+      if (orientation.beta !== null && orientation.gamma !== null && innerWidth < 500) {
+        rotationX = -(orientation.beta - 90) * (Math.PI / 180) * 0.5;
         rotationY = orientation.gamma * (Math.PI / 180);
       } else {
         rotationX = mousePos.y * intensity;

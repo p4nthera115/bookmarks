@@ -58,6 +58,7 @@ const Card = ({
   }, []);
   const initialPos = useMemo(() => new THREE.Vector3(cardPos * 0.4, 0, 0), [cardPos]);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -104,7 +105,6 @@ const Card = ({
   const backNormal = card.normalMap.back ? backNormalTex : null;
 
   const rotationRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0.7, 0));
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
 
   const goldEnvMap = {
