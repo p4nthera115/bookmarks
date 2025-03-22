@@ -180,7 +180,7 @@ const Card = ({
 
       if (orientation.beta !== null && orientation.gamma !== null) {
         const sensitivity = 0.9;
-        rotationX = -(orientation.beta - 90) * (Math.PI / 180) * sensitivity;
+        rotationX = -(orientation.beta) * (Math.PI / 180) * sensitivity;
         rotationY = orientation.gamma * (Math.PI / 180) * sensitivity;
       } else {
         rotationX = mousePos.y * intensity;
