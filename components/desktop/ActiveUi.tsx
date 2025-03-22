@@ -118,11 +118,14 @@ export default function ActiveUi({
               transition={{ duration: 0.3 }}
               className="absolute top-6 left-1/2 border bg-black/90 border-black/20 text-black/40 p-2 rounded-lg shadow-lg flex gap-2 items-center"
             >
-              <div className="flex gap-1">
-                <div className="text-2xl justify-center flex items-center border border-white/50 text-white p-1 size-8 rounded-lg">
+              <div className="flex gap-3 text-white items-center">
+                <div className="text-2xl justify-center flex items-center border border-white/50 p-1 h-6 w-10 rounded-lg">
                   <IoIosArrowRoundBack />
                 </div>
-                <div className="text-2xl justify-center flex items-center border border-white/50 text-white p-1 size-8 rounded-lg">
+                <span className="opacity-90 text-xs">
+                  use arrow keys to navigate
+                </span>
+                <div className="text-2xl justify-center flex items-center border border-white/50 p-1 h-6 w-10 rounded-lg">
                   <IoIosArrowRoundForward />
                 </div>
               </div>

@@ -3,9 +3,6 @@
 import { CardType } from "@/app/definitions";
 import { Dispatch, SetStateAction, useState, useEffect, useMemo, useCallback } from "react";
 import { BiPound, BiDollar, BiEuro } from "react-icons/bi";
-// import { SiMaterialdesignicons } from "react-icons/si";
-// import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
-// import { RxDimensions } from "react-icons/rx";
 import NumberFlow from "@number-flow/react";
 import { TfiClose } from "react-icons/tfi";
 import { Instrument_Sans } from "next/font/google";
@@ -90,7 +87,7 @@ export default function ActiveUi({
 
     const touchEndX = e.changedTouches[0].clientX;
     const deltaX = touchEndX - touchStartX;
-    const swipeThreshold = 50; // Minimum swipe distance in pixels
+    const swipeThreshold = 50;
 
     if (deltaX > swipeThreshold) {
       const currentIndex = cardArr.findIndex(card => card.id === active);
@@ -139,25 +136,6 @@ export default function ActiveUi({
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* INDICATOR */}
-          {/* {!hasSeenIndicator && (
-            <motion.div
-              initial={{ opacity: 0, x: "-50%", y: 10 }}
-              animate={{ opacity: 0.5, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="absolute top-6 left-1/2 border bg-black/90 border-black/10 text-black/40 p-2 rounded-lg shadow-lg flex gap-2 items-center"
-            >
-              <div className="flex gap-1">
-                <div className="text-2xl justify-center flex items-center border border-white/50 text-white p-1 size-8 rounded-lg">
-                  <IoIosArrowRoundBack />
-                </div>
-                <div className="text-2xl justify-center flex items-center border border-white/50 text-white p-1 size-8 rounded-lg">
-                  <IoIosArrowRoundForward />
-                </div>
-              </div>
-            </motion.div>
-          )} */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
