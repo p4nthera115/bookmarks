@@ -154,16 +154,65 @@ const Card = ({
     setActive(id)
   };
 
+  // useFrame((state, delta) => {
+  //   if (!groupRef.current) return;
+
+  //   const dz = active ? 20 : 1.75 / 2; // Spacing between cards along z-axis
+
+  //   const N = cards.length;
+  //   const focusedIndex = scroll.offset * (N - 1); // Maps scroll offset (0 to 1) to card index (0 to N-1)
+  //   const targetZ = 5 + (index - focusedIndex) * dz; // Position cards relative to focused card at z=5
+  //   const distanceFromFocus = Math.abs(targetZ - focusZ);
+  //   const elevationFactor = Math.max(0, 1 - distanceFromFocus / elevationThreshold); // Smooth elevation
+  //   const targetY = elevationHeight * elevationFactor + 0.5;
+
+  //   let targetPosition: [number, number, number];
+  //   let smoothTime: number;
+  //   let targetRotation: [number, number, number];
+  //   let intensity: number;
+
+  //   if (active === id) {
+  //     targetPosition = [0, 4.5, -0.055];
+  //     smoothTime = 0.35;
+  //     intensity = 0.25;
+
+  //     let rotationX, rotationY;
+
+  //     if (orientation.beta !== null && orientation.gamma !== null && innerWidth < 500) {
+  //       rotationX = -(orientation.beta) * (Math.PI / 180) * 0.4;
+  //       rotationY = orientation.gamma * (Math.PI / 180);
+  //     } else {
+  //       rotationX = mousePos.y * intensity;
+  //       rotationY = mousePos.x * intensity;
+  //     }
+
+  //     targetRotation = [
+  //       -Math.PI / 2 - rotationX,
+  //       card.isFlipped ? rotationY + Math.PI : rotationY,
+  //       0,
+  //     ];
+
+  //   } else {
+  //     targetPosition = [0, targetY, targetZ];
+  //     smoothTime = 0.15;
+  //     targetRotation = [0, 0, 0];
+  //   }
+
+  //   easing.damp3(groupRef.current.position, targetPosition, smoothTime, delta);
+  //   easing.damp3(rotationRef.current, targetRotation, active ? 0.35 : 0.265, delta);
+
+  //   groupRef.current.rotation.set(rotationRef.current.x, rotationRef.current.y, rotationRef.current.z);
+  // });
+
   useFrame((state, delta) => {
     if (!groupRef.current) return;
 
-    const dz = active ? 20 : 1.75 / 2; // Spacing between cards along z-axis
-
     const N = cards.length;
-    const focusedIndex = scroll.offset * (N - 1); // Maps scroll offset (0 to 1) to card index (0 to N-1)
-    const targetZ = 5 + (index - focusedIndex) * dz; // Position cards relative to focused card at z=5
+    const focusedIndex = scroll.offset * (N - 1);
+    const dz = active ? 20 : 1.75 / 2;
+    const targetZ = 5 + (index - focusedIndex) * dz;
     const distanceFromFocus = Math.abs(targetZ - focusZ);
-    const elevationFactor = Math.max(0, 1 - distanceFromFocus / elevationThreshold); // Smooth elevation
+    const elevationFactor = Math.max(0, 1 - distanceFromFocus / elevationThreshold);
     const targetY = elevationHeight * elevationFactor + 0.5;
 
     let targetPosition: [number, number, number];
@@ -171,36 +220,59 @@ const Card = ({
     let targetRotation: [number, number, number];
     let intensity: number;
 
-    if (active === id) {
-      targetPosition = [0, 4.5, -0.055];
-      smoothTime = 0.35;
-      intensity = 0.25;
+    if (active !== null) {
+      // Find the index of the active card
+      const activeIndex = cards.findIndex(card => card.id === active);
 
-      let rotationX, rotationY;
+      if (index === activeIndex) {
+        // Active card at center
+        targetPosition = [0, 4.5, -0.055];
+        smoothTime = 0.35;
+        intensity = 0.25;
 
-      if (orientation.beta !== null && orientation.gamma !== null && innerWidth < 500) {
-        rotationX = -(orientation.beta) * (Math.PI / 180) * 0.4;
-        rotationY = orientation.gamma * (Math.PI / 180);
+        let rotationX, rotationY;
+        if (orientation.beta !== null && orientation.gamma !== null && innerWidth < 500) {
+          rotationX = -(orientation.beta) * (Math.PI / 180) * 0.4;
+          rotationY = orientation.gamma * (Math.PI / 180);
+        } else {
+          rotationX = mousePos.y * intensity;
+          rotationY = mousePos.x * intensity;
+        }
+        targetRotation = [
+          -Math.PI / 2 - rotationX,
+          card.isFlipped ? rotationY + Math.PI : rotationY,
+          0,
+        ];
+      } else if (index === activeIndex - 1) {
+        // Previous card to the left
+        targetPosition = [-5, 4.5, -0.055];
+        smoothTime = 0.35;
+        targetRotation = [0, 0, 0];
+      } else if (index === activeIndex + 1) {
+        // Next card to the right
+        targetPosition = [5, 4.5, -0.055];
+        smoothTime = 0.35;
+        targetRotation = [0, 0, 0];
       } else {
-        rotationX = mousePos.y * intensity;
-        rotationY = mousePos.x * intensity;
+        // Non-adjacent cards: position off-screen and hide
+        targetPosition = [(index - activeIndex) * 5, 4.5, -0.055];
+        smoothTime = 0.15;
+        targetRotation = [0, 0, 0];
+        groupRef.current.visible = false;
+        easing.damp3(groupRef.current.position, targetPosition, smoothTime, delta);
+        return; // Skip further updates for hidden cards
       }
-
-      targetRotation = [
-        -Math.PI / 2 - rotationX,
-        card.isFlipped ? rotationY + Math.PI : rotationY,
-        0,
-      ];
-
+      groupRef.current.visible = true;
     } else {
+      // Normal scroll behavior when no card is active
       targetPosition = [0, targetY, targetZ];
       smoothTime = 0.15;
       targetRotation = [0, 0, 0];
+      groupRef.current.visible = true;
     }
 
     easing.damp3(groupRef.current.position, targetPosition, smoothTime, delta);
     easing.damp3(rotationRef.current, targetRotation, active ? 0.35 : 0.265, delta);
-
     groupRef.current.rotation.set(rotationRef.current.x, rotationRef.current.y, rotationRef.current.z);
   });
 

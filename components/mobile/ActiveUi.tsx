@@ -34,6 +34,7 @@ export default function ActiveUi({
 }: ActiveUiProps) {
   const [hasSeenIndicator, setHasSeenIndicator] = useState(false);
   const [activeCurrency, setActiveCurrency] = useState({ id: 1, name: "usd", value: 8.43, symbol: "$" });
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const currencies = [
     { id: 1, name: "usd", icon: <BiDollar />, value: 8.43, symbol: "$" },
@@ -64,11 +65,11 @@ export default function ActiveUi({
       if (!hasSeenIndicator) setHasSeenIndicator(true);
 
       if (e.key === "ArrowRight" || e.key === "ArrowUp") {
-        const nextActive = active % cardArr.length + 1;
+        const nextActive = active === 11 ? 11 : active + 1;
         setActive(nextActive);
         if (activeCard) flipCard(active, false);
       } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
-        const prevActive = active === 1 ? 11 : active - 1;
+        const prevActive = active === 1 ? 1 : active - 1;
         setActive(prevActive);
         if (activeCard) flipCard(active, false);
       } else if (e.key === "Escape") {
@@ -79,6 +80,36 @@ export default function ActiveUi({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [active, activeCard, flipCard, setActive, handleClose, hasSeenIndicator, cardArr.length]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+
+    const touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartX;
+    const swipeThreshold = 50; // Minimum swipe distance in pixels
+
+    if (deltaX > swipeThreshold) {
+      const currentIndex = cardArr.findIndex(card => card.id === active);
+      if (currentIndex > 0) {
+        const prevCard = cardArr[currentIndex - 1];
+        setActive(prevCard.id);
+        if (activeCard) flipCard(activeCard.id, false);
+      }
+    } else if (deltaX < -swipeThreshold) {
+      const currentIndex = cardArr.findIndex(card => card.id === active);
+      if (currentIndex < cardArr.length - 1) {
+        const nextCard = cardArr[currentIndex + 1];
+        setActive(nextCard.id);
+        if (activeCard) flipCard(activeCard.id, false);
+      }
+    }
+
+    setTouchStartX(null);
+  };
 
   const handleCurrencyClick = (id: number) => {
     const nextActive = id % currencies.length
@@ -105,6 +136,8 @@ export default function ActiveUi({
           className="fixed h-full w-full z-30 flex justify-between"
           style={{ pointerEvents: active ? "auto" : "none" }}
           onClick={() => setHasSeenIndicator(true)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           {/* INDICATOR */}
           {/* {!hasSeenIndicator && (
