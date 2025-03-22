@@ -277,7 +277,7 @@ const Card = ({
               map={frontFoil}
               normalMap={frontNormal}
               normalScale={new THREE.Vector2(0.1, 0.1)}
-              envMap={envMap.map}
+              envMap={active ? envMap.map : null}
               envMapIntensity={envMap.intensity}
               envMapRotation={envMap.rotation}
             />
@@ -299,7 +299,7 @@ const Card = ({
               map={backFoil}
               normalMap={backNormal}
               normalScale={new THREE.Vector2(0.1, 0.1)}
-              envMap={envMap.map}
+              envMap={active ? envMap.map : null}
               envMapIntensity={envMap.intensity}
               envMapRotation={envMap.rotation}
             />

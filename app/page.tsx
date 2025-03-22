@@ -82,7 +82,7 @@ export default function Home() {
         name: "Oak",
         colorVariations: [
           {
-            colorName: "Dark Blue",
+            colorName: "Blue",
             cardColor: "#293348",
             bgColor: "#546790",
             illustration: {
