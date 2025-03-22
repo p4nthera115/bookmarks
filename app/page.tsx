@@ -232,11 +232,11 @@ export default function Home() {
         ],
         foil: {
           front: "",
-          back: ""
+          back: "/penguin/foil.png"
         },
         normalMap: {
           front: "",
-          back: "",
+          back: "/penguin/normal.png",
         },
         info: (
           <p>
@@ -403,12 +403,12 @@ export default function Home() {
           }
         ],
         foil: {
-          front: "",
-          back: ""
+          front: "/readers/foil/front.png",
+          back: "/readers/foil/back.png"
         },
         normalMap: {
-          front: "",
-          back: "",
+          front: "/readers/normals/front.png",
+          back: "/readers/normals/back.png",
         },
         info: (
           <p>
