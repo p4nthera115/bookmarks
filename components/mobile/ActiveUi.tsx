@@ -78,7 +78,7 @@ export default function ActiveUi({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [active, activeCard, flipCard, setActive, handleClose, hasSeenIndicator]);
+  }, [active, activeCard, flipCard, setActive, handleClose, hasSeenIndicator, cardArr.length]);
 
   const handleCurrencyClick = (id: number) => {
     const nextActive = id % currencies.length

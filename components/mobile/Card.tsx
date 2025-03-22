@@ -62,8 +62,6 @@ const Card = ({
   const rotationRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
   const scroll = useScroll();
   const [orientation, setOrientation] = useState({ beta: 0, gamma: 0 })
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
 
   useEffect(() => {
     const handleOrientation = (event: DeviceOrientationEvent) => {
@@ -95,7 +93,7 @@ const Card = ({
   const elevationThreshold = 0.4; // Threshold for elevation
   const elevationHeight = 0.7; // Height to elevate the focused card
 
-  const initialPos = useMemo(() => new THREE.Vector3(0, 0, index * dz), [index]);
+  const initialPos = useMemo(() => new THREE.Vector3(0, 0, index * dz), [index, dz]);
 
   const selectedVariant = card.colorVariations[card.selectedVariantIndex];
 
