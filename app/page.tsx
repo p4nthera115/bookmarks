@@ -221,11 +221,11 @@ export default function Home() {
         colorVariations: [
           {
             colorName: "",
-            cardColor: "#adc8e0",
-            bgColor: "#91b2cf",
+            cardColor: "#f2ebde",
+            bgColor: "#b7afa2",
             illustration: {
-              front: "",
-              back: "",
+              front: "/penguin/illustrations/front.png",
+              back: "/penguin/illustrations/back.png",
             },
             foilColor: "gold"
           }
