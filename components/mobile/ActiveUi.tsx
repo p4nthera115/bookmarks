@@ -142,11 +142,11 @@ export default function ActiveUi({
           {/* INDICATOR */}
           {/* {!hasSeenIndicator && (
             <motion.div
-              initial={{ opacity: 0, x: "-50%", y: 20 }}
+              initial={{ opacity: 0, x: "-50%", y: 10 }}
               animate={{ opacity: 0.5, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="absolute top-6 left-1/2 border bg-black/90 border-black/20 text-black/40 p-2 rounded-lg shadow-lg flex gap-2 items-center"
+              className="absolute top-6 left-1/2 border bg-black/90 border-black/10 text-black/40 p-2 rounded-lg shadow-lg flex gap-2 items-center"
             >
               <div className="flex gap-1">
                 <div className="text-2xl justify-center flex items-center border border-white/50 text-white p-1 size-8 rounded-lg">
@@ -159,9 +159,9 @@ export default function ActiveUi({
             </motion.div>
           )} */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{ delay: 0, duration: 0.3 }}
             className={`${instrument.className} h-full w-full flex justify-between flex-col`}
           >
@@ -170,7 +170,7 @@ export default function ActiveUi({
             <motion.div className="flex flex-row justify-between w-full h-24 p-5">
               <motion.h2
                 key={activeCard?.name}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.3 }}
@@ -196,7 +196,7 @@ export default function ActiveUi({
               </motion.h2>
 
               <motion.button
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.3 }}
@@ -250,9 +250,9 @@ export default function ActiveUi({
 
             {/* BOTTOM */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
+              exit={{ opacity: 0, y: -10 }}
               transition={{ delay: 0.4, duration: 0.3 }}
               className="flex justify-between w-full h-16 items-center p-5 px-3"
             >
@@ -278,9 +278,9 @@ export default function ActiveUi({
                 {activeCard?.inStock ? (
                   <motion.a
                     href={activeCard.link}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
+                    exit={{ opacity: 0, y: 10 }}
                     transition={{ delay: 0.4, duration: 0.3 }}
                     onClick={() => setActive(null)}
                     className="group h-10 w-16 rounded-full border-neutral-800 border overflow-hidden"
@@ -293,9 +293,9 @@ export default function ActiveUi({
                 ) : (
                   <motion.button
                     disabled
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
+                    exit={{ opacity: 0, y: 10 }}
                     transition={{ delay: 0.4, duration: 0.3 }}
                     className="h-10 rounded-full border-black/20 text-black/40 border hover:cursor-not-allowed px-3 justify-center items-center"
                   >
