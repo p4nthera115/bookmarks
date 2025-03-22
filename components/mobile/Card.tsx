@@ -181,7 +181,7 @@ const Card = ({
       let rotationX, rotationY;
 
       if (orientation.beta !== null && orientation.gamma !== null && innerWidth < 500) {
-        rotationX = -(orientation.beta - 90) * (Math.PI / 180) * 0.5;
+        rotationX = -(orientation.beta) * (Math.PI / 180) * 0.4;
         rotationY = orientation.gamma * (Math.PI / 180);
       } else {
         rotationX = mousePos.y * intensity;
