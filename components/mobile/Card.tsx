@@ -33,9 +33,9 @@ interface CardProps {
   cards: CardType[];
 }
 
-type DeviceOrientationEventConstructor = typeof DeviceOrientationEvent & {
-  requestPermission?: () => Promise<'granted' | 'denied'>;
-};
+// type DeviceOrientationEventConstructor = typeof DeviceOrientationEvent & {
+//   requestPermission?: () => Promise<'granted' | 'denied'>;
+// };
 
 const Card = ({
   card,
