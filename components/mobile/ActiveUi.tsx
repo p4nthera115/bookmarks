@@ -80,6 +80,7 @@ export default function ActiveUi({
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStartX(e.touches[0].clientX);
+    setHasSeenIndicator(true);
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
