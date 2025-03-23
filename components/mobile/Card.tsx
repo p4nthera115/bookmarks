@@ -93,7 +93,6 @@ const Card = ({
       }
     };
 
-
     return () => {
       window.removeEventListener('deviceorientation', handleOrientation);
     };
