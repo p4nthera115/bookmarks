@@ -33,6 +33,11 @@ interface CardProps {
   cards: CardType[];
 }
 
+type DeviceOrientationEventConstructor = typeof DeviceOrientationEvent & {
+  requestPermission?: () => Promise<'granted' | 'denied'>;
+};
+
+
 const Card = ({
   card,
   id,
@@ -61,20 +66,28 @@ const Card = ({
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const rotationRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
   const scroll = useScroll();
-  const [orientation, setOrientation] = useState({ beta: 0, gamma: 0 })
+  const [orientation, setOrientation] = useState<{ beta: number | null, gamma: number | null }>({ beta: null, gamma: null });
+  const [listenerActive, setListenerActive] = useState(false);
 
   useEffect(() => {
-    const handleOrientation = (event: DeviceOrientationEvent) => {
-      if (event.beta !== null && event.gamma !== null) {
-        setOrientation({ beta: event.beta, gamma: event.gamma });
-      }
-    };
-
-    window.addEventListener('deviceorientation', handleOrientation);
-
-    return () => window.removeEventListener('deviceorientation', handleOrientation);
+    if (typeof DeviceOrientationEvent === 'undefined' || !('requestPermission' in DeviceOrientationEvent)) {
+      setListenerActive(true);
+    }
   }, []);
 
+  useEffect(() => {
+    if (listenerActive) {
+      const handleOrientation = (event: DeviceOrientationEvent) => {
+        if (event.beta !== null && event.gamma !== null) {
+          setOrientation({ beta: event.beta, gamma: event.gamma });
+        }
+      };
+      window.addEventListener('deviceorientation', handleOrientation);
+      return () => window.removeEventListener('deviceorientation', handleOrientation);
+    }
+  }, [listenerActive]);
+
+  // MOUSE ROTATION
   useEffect(() => {
     const pointerMove = (e: MouseEvent) => {
       if (active === id) {
@@ -87,16 +100,16 @@ const Card = ({
     return () => window.removeEventListener("mousemove", pointerMove);
   }, [active, id]);
 
-  // Constants for positioning
-  const dz = 1.75 / 2; // Spacing between cards along z-axis
-  const focusZ = 5; // Z-position of the focused card
-  const elevationThreshold = 0.6; // Threshold for elevation
-  const elevationHeight = 0.7; // Height to elevate the focused card
+  // POSITIONING
+  const spacing = 1.75 / 2;
+  const focusZ = 5;
+  const elevationThreshold = 0.6;
+  const elevationHeight = 0.7;
 
-  const initialPos = useMemo(() => new THREE.Vector3(0, 0, index * dz), [index, dz]);
+  const initialPos = useMemo(() => new THREE.Vector3(0, 0, index * spacing), [index, spacing]);
 
+  // TEXTURES
   const selectedVariant = card.colorVariations[card.selectedVariantIndex];
-
   const defaultTexturePath = '/bookmark.png';
 
   const allTexturePaths = [
@@ -146,12 +159,37 @@ const Card = ({
   };
 
   const envMap = selectedVariant.foilColor === "gold" ? goldEnvMap : silverEnvMap;
-
   envMap.map.mapping = THREE.EquirectangularReflectionMapping;
 
-  const click = (e: { stopPropagation: () => void }) => {
+  // ORIENTATION PERMISSION
+  const requestOrientationPermission = async (): Promise<void> => {
+    if (typeof DeviceOrientationEvent !== 'undefined') {
+      const DeviceOrientationEventTyped = DeviceOrientationEvent as DeviceOrientationEventConstructor;
+
+      if (typeof DeviceOrientationEventTyped.requestPermission === 'function') {
+        try {
+          const permission = await DeviceOrientationEventTyped.requestPermission();
+          if (permission === 'granted') {
+            console.log('Device orientation permission granted');
+            setListenerActive(true)
+          } else {
+            console.log('Device orientation permission denied');
+          }
+        } catch (error) {
+          console.error('Error requesting orientation permission:', error);
+        }
+      } else {
+        console.log('Permission not required or not supported');
+      }
+      console.log('DeviceOrientationEvent is not supported');
+    }
+  }
+
+
+  const click = async (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    setActive(id)
+    requestOrientationPermission()
+    setActive(id);
   };
 
   useFrame((state, delta) => {
@@ -159,8 +197,8 @@ const Card = ({
 
     const N = cards.length;
     const focusedIndex = scroll.offset * (N - 1);
-    const dz = active ? 20 : 1.75 / 2;
-    const targetZ = 5 + (index - focusedIndex) * dz;
+    const spacing = active ? 20 : 1.75 / 2;
+    const targetZ = 5 + (index - focusedIndex) * spacing;
     const distanceFromFocus = Math.abs(targetZ - focusZ);
     const elevationFactor = Math.max(0, 1 - distanceFromFocus / elevationThreshold);
     const targetY = elevationHeight * elevationFactor + 0.5;
@@ -179,7 +217,7 @@ const Card = ({
         intensity = 0.25;
 
         let rotationX, rotationY;
-        if (orientation.beta !== null && orientation.gamma !== null && innerWidth < 500) {
+        if (orientation.beta !== null && orientation.gamma !== null && window.innerWidth < 500) {
           rotationX = -(orientation.beta - 45) * (Math.PI / 180) * 0.4;
           rotationY = orientation.gamma * (Math.PI / 180);
         } else {
@@ -233,106 +271,99 @@ const Card = ({
         <meshPhysicalMaterial color={selectedVariant.cardColor} opacity={1} />
 
         {/* FRONT ILLUSTRATION */}
-        {
-          frontIllustration ?
-            card.name === "Protagonist/Antagonist" ? (
-              <Decal
-                receiveShadow={active ? false : true}
-                position={[0, 0, 0.1]}
-                scale={[1, 1.75, 0.1]}
-                rotation={[0, 0, Math.PI * 2]}>
-                <meshPhysicalMaterial
-                  polygonOffset
-                  polygonOffsetFactor={-1}
-                  map={frontIllustration}
-                  roughness={0.9}
-                  metalness={0.1}
-                  side={THREE.DoubleSide}
-                />
-              </Decal>
-            ) :
-              (
-                <Decal
-                  receiveShadow={active ? false : true}
-                  scale={[1, 1.75, 0.1]}
-                  rotation={[0, 0, Math.PI * 2]}>
-                  <meshPhysicalMaterial
-                    polygonOffset
-                    polygonOffsetFactor={-1}
-                    map={frontIllustration}
-                    roughness={0.9}
-                    metalness={0.1}
-                    side={THREE.DoubleSide}
-                  />
-                </Decal>
-              ) : null
-        }
-
-        {/* BACK ILLUSTRATION */}
-        {
-          backIllustration ? (
+        {frontIllustration ? (
+          card.name === "Protagonist/Antagonist" ? (
             <Decal
               receiveShadow={active ? false : true}
-              position={[0, 0, -0.04]}
+              position={[0, 0, 0.1]}
               scale={[1, 1.75, 0.1]}
-              rotation={[0, Math.PI, 0]}
+              rotation={[0, 0, Math.PI * 2]}
             >
               <meshPhysicalMaterial
                 polygonOffset
                 polygonOffsetFactor={-1}
-                map={backIllustration}
+                map={frontIllustration}
                 roughness={0.9}
                 metalness={0.1}
                 side={THREE.DoubleSide}
               />
             </Decal>
-          ) : null
-        }
+          ) : (
+            <Decal
+              receiveShadow={active ? false : true}
+              scale={[1, 1.75, 0.1]}
+              rotation={[0, 0, Math.PI * 2]}
+            >
+              <meshPhysicalMaterial
+                polygonOffset
+                polygonOffsetFactor={-1}
+                map={frontIllustration}
+                roughness={0.9}
+                metalness={0.1}
+                side={THREE.DoubleSide}
+              />
+            </Decal>
+          )
+        ) : null}
+
+        {/* BACK ILLUSTRATION */}
+        {backIllustration ? (
+          <Decal
+            receiveShadow={active ? false : true}
+            position={[0, 0, -0.04]}
+            scale={[1, 1.75, 0.1]}
+            rotation={[0, Math.PI, 0]}
+          >
+            <meshPhysicalMaterial
+              polygonOffset
+              polygonOffsetFactor={-1}
+              map={backIllustration}
+              roughness={0.9}
+              metalness={0.1}
+              side={THREE.DoubleSide}
+            />
+          </Decal>
+        ) : null}
       </mesh>
 
-
       {/* FRONT FOIL */}
-      {
-        frontFoil ? (
-          <mesh geometry={planeGeometry} position={[0, 0, 0.03]}>
-            <meshPhysicalMaterial
-              transparent
-              roughness={0.1}
-              metalness={0.8}
-              reflectivity={0.8}
-              sheen={1}
-              map={frontFoil}
-              normalMap={frontNormal}
-              normalScale={new THREE.Vector2(0.1, 0.1)}
-              envMap={envMap.map}
-              envMapIntensity={envMap.intensity}
-              envMapRotation={envMap.rotation}
-            />
-          </mesh>
-        ) : null
-      }
+      {frontFoil ? (
+        <mesh geometry={planeGeometry} position={[0, 0, 0.03]}>
+          <meshPhysicalMaterial
+            transparent
+            roughness={0.1}
+            metalness={0.8}
+            reflectivity={0.8}
+            sheen={1}
+            map={frontFoil}
+            normalMap={frontNormal}
+            normalScale={new THREE.Vector2(0.1, 0.1)}
+            envMap={envMap.map}
+            envMapIntensity={envMap.intensity}
+            envMapRotation={envMap.rotation}
+          />
+        </mesh>
+      ) : null}
 
       {/* BACK FOIL */}
-      {
-        backFoil ? (
-          <mesh geometry={planeGeometry} rotation={[0, Math.PI, 0]} position={[0, 0, -0.01]}>
-            <meshPhysicalMaterial
-              side={THREE.DoubleSide}
-              transparent
-              roughness={0.1}
-              metalness={0.8}
-              reflectivity={0.8}
-              sheen={1}
-              map={backFoil}
-              normalMap={backNormal}
-              normalScale={new THREE.Vector2(0.1, 0.1)}
-              envMap={envMap.map}
-              envMapIntensity={envMap.intensity}
-              envMapRotation={envMap.rotation}
-            />
-          </mesh>
-        ) : null
-      }
+      {backFoil ? (
+        <mesh geometry={planeGeometry} rotation={[0, Math.PI, 0]} position={[0, 0, -0.01]}>
+          <meshPhysicalMaterial
+            side={THREE.DoubleSide}
+            transparent
+            roughness={0.1}
+            metalness={0.8}
+            reflectivity={0.8}
+            sheen={1}
+            map={backFoil}
+            normalMap={backNormal}
+            normalScale={new THREE.Vector2(0.1, 0.1)}
+            envMap={envMap.map}
+            envMapIntensity={envMap.intensity}
+            envMapRotation={envMap.rotation}
+          />
+        </mesh>
+      ) : null}
     </group>
   );
 };

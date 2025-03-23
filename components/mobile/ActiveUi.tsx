@@ -130,7 +130,7 @@ export default function ActiveUi({
   const swipeVariants = {
     initial: { x: 0, opacity: 1 },
     animate: {
-      x: [0, -80],
+      x: [0, -75],
       opacity: [0, 1, 0],
       transition: {
         x: {
@@ -139,7 +139,7 @@ export default function ActiveUi({
           duration: 1,
           repeat: Infinity,
           repeatType: 'loop',
-          repeatDelay: 1.2,
+          repeatDelay: 0.9,
           ease: 'circOut'
         },
         opacity: {
@@ -148,7 +148,7 @@ export default function ActiveUi({
           duration: 0.7,
           repeat: Infinity,
           repeatType: 'loop',
-          repeatDelay: 1.5,
+          repeatDelay: 1.2,
           ease: 'easeInOut'
         }
       }
