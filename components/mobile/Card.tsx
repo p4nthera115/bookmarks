@@ -64,27 +64,35 @@ const Card = ({
   const [orientation, setOrientation] = useState({ beta: 0, gamma: 0 })
 
   useEffect(() => {
+
+    function hasRequestPermission(obj: any): obj is { requestPermission: () => Promise<'granted' | 'denied'> } {
+      return obj && typeof obj.requestPermission === 'function';
+    }
+    const requestOrientationPermission = async () => {
+      if (typeof DeviceOrientationEvent !== 'undefined' && hasRequestPermission(DeviceOrientationEvent)) {
+        try {
+          const permission = await DeviceOrientationEvent.requestPermission();
+          if (permission === 'granted') {
+            console.log('Device orientation permission granted');
+          } else {
+            console.log('Device orientation permission denied');
+          }
+        } catch (error) {
+          console.error('Error requesting orientation permission:', error);
+        }
+      } else {
+        console.log('Permission not required or not supported');
+      }
+    };
+
+    if (active) requestOrientationPermission();
+
     const handleOrientation = (event: DeviceOrientationEvent) => {
       if (event.beta !== null && event.gamma !== null) {
         setOrientation({ beta: event.beta, gamma: event.gamma });
       }
     };
 
-    const requestOrientationPermission = async () => {
-      if (typeof DeviceOrientationEvent !== 'undefined' && 'requestPermission' in DeviceOrientationEvent) {
-        const permission = await (DeviceOrientationEvent as any).requestPermission();
-        if (permission === 'granted') {
-          window.addEventListener('deviceorientation', handleOrientation);
-        } else {
-          console.log('Device orientation permission denied');
-        }
-      } else {
-        window.addEventListener('deviceorientation', handleOrientation);
-      }
-    };
-
-    if (active)
-      requestOrientationPermission();
 
     return () => {
       window.removeEventListener('deviceorientation', handleOrientation);
