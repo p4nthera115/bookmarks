@@ -70,7 +70,8 @@ const Card = ({
       }
     };
 
-    window.addEventListener('deviceorientation', handleOrientation);
+    if (active)
+      window.addEventListener('deviceorientation', handleOrientation);
 
     return () => window.removeEventListener('deviceorientation', handleOrientation);
   }, []);
