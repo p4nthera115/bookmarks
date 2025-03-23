@@ -51,6 +51,24 @@ const config: Config = {
           '5': 'hsl(var(--chart-5))'
         }
       },
+      animation: {
+        'rotate-card': 'rotate 2s infinite ease-in-out alternate',
+      },
+      keyframes: {
+        // rotate: {
+        //   '0%, 100%': {
+        //     transform: 'skew(3deg, 10deg)'
+        //   },
+        //   '50%': {
+        //     transform: 'skew(-3deg, -10deg)'
+        //   }
+        // },
+        rotate: {
+          '0%': { transform: 'perspective(1000px) rotateY(-35deg)' },
+          '100%': { transform: 'perspective(1000px) rotateY(35deg)' },
+        },
+
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

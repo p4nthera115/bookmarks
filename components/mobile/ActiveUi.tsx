@@ -6,7 +6,7 @@ import { BiPound, BiDollar, BiEuro } from "react-icons/bi";
 import NumberFlow from "@number-flow/react";
 import { TfiClose } from "react-icons/tfi";
 import { Instrument_Sans } from "next/font/google";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, anticipate } from "framer-motion";
 
 const instrument = Instrument_Sans({
   weight: "400",
@@ -126,6 +126,34 @@ export default function ActiveUi({
 
   const nameLength = selectedVariant && activeCard && selectedVariant?.colorName.length + activeCard?.name.length + 1
 
+  const swipeVariants = {
+    initial: { x: 0, opacity: 1 },
+    animate: {
+      x: [0, -80],
+      opacity: [0, 1, 0],
+      transition: {
+        x: {
+          times: [0.3, 1],
+          delay: 0.7,
+          duration: 1,
+          repeat: Infinity,
+          repeatType: 'loop',
+          repeatDelay: 1.2,
+          ease: 'circOut'
+        },
+        opacity: {
+          times: [0, 0.3, 1],
+          delay: 0.7,
+          duration: 0.7,
+          repeat: Infinity,
+          repeatType: 'loop',
+          repeatDelay: 1.5,
+          ease: 'easeInOut'
+        }
+      }
+    }
+  };
+
   return (
     <AnimatePresence>
       {active !== null && (
@@ -136,6 +164,35 @@ export default function ActiveUi({
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
+          {/* INDICATOR */}
+          {!hasSeenIndicator && innerWidth < 500 && (
+            <motion.div
+              initial={{ opacity: 0, }}
+              animate={{ opacity: 1, }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 0.3, duration: 0.2 }}
+              className="absolute h-full w-full bg-black/70 flex gap-2 items-center justify-center z-50 backdrop-blur"
+            >
+              <div className="flex flex-col items-center text-white justidy-center gap-28 -translate-y-5">
+                <div>
+                  <div className="border-2 bg-black/30 border-white/50 h-48 p-6 rounded-xl justify-center items-center flex animate-rotate-card ">
+                    <span className="tracking-wider text-sm">tilt phone</span>
+                  </div>
+                </div>
+                <div className="justify-center flex flex-col items-center gap-2">
+                  <div className="border-white/50 border-2 bg-black/20 rounded-full w-28 h-12 p-2 justify-center items-center flex">
+                    <motion.div
+                      variants={swipeVariants}
+                      initial="initial"
+                      animate="animate"
+                      className="h-full aspect-square rounded-full bg-white ml-auto">
+                    </motion.div>
+                  </div>
+                  <span className="text-sm">next card</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
