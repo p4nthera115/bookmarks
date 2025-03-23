@@ -64,11 +64,11 @@ export default function ActiveUi({
       if (!hasSeenIndicator) setHasSeenIndicator(true);
 
       if (e.key === "ArrowRight" || e.key === "ArrowUp") {
-        const nextActive = active % 11 + 1;
+        const nextActive = active % cardArr.length + 1;
         setActive(nextActive);
         if (activeCard) flipCard(active, false);
       } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
-        const prevActive = active === 1 ? 11 : active - 1;
+        const prevActive = active === 1 ? cardArr.length : active - 1;
         setActive(prevActive);
         if (activeCard) flipCard(active, false);
       } else if (e.key === "Escape") {

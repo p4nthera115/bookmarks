@@ -62,7 +62,7 @@ export default function ActiveUi({
       if (!hasSeenIndicator) setHasSeenIndicator(true);
 
       if (e.key === "ArrowRight" || e.key === "ArrowUp") {
-        const nextActive = active === 11 ? 11 : active + 1;
+        const nextActive = active === cardArr.length ? cardArr.length : active + 1;
         setActive(nextActive);
         if (activeCard) flipCard(active, false);
       } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
