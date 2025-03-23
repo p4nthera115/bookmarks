@@ -93,21 +93,21 @@ export default function Home() {
           },
           {
             colorName: "Green",
-            cardColor: "#adc8e0",
-            bgColor: "#91b2cf",
+            cardColor: "#727960",
+            bgColor: "#849967",
             illustration: {
-              front: "",
-              back: "",
+              front: "/oak/illustrations/green.png",
+              back: "/oak/illustrations/green.png",
             },
             foilColor: "gold"
           },
           {
             colorName: "Orange",
-            cardColor: "#adc8e0",
-            bgColor: "#91b2cf",
+            cardColor: "#c67550",
+            bgColor: "#c29c77",
             illustration: {
-              front: "",
-              back: "",
+              front: "/oak/illustrations/orange.png",
+              back: "/oak/illustrations/orange.png",
             },
             foilColor: "gold"
           },
@@ -393,11 +393,11 @@ export default function Home() {
         colorVariations: [
           {
             colorName: "",
-            cardColor: "#adc8e0",
-            bgColor: "#91b2cf",
+            cardColor: "#1b2f3d",
+            bgColor: "#546790",
             illustration: {
-              front: "",
-              back: "",
+              front: "/readers/illustrations/front.png",
+              back: "/readers/illustrations/back.png",
             },
             foilColor: "gold"
           }
