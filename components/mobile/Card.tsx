@@ -70,9 +70,25 @@ const Card = ({
       }
     };
 
-    window.addEventListener('deviceorientation', handleOrientation);
+    const requestOrientationPermission = async () => {
+      if (typeof DeviceOrientationEvent !== 'undefined' && 'requestPermission' in DeviceOrientationEvent) {
+        const permission = await (DeviceOrientationEvent as any).requestPermission();
+        if (permission === 'granted') {
+          window.addEventListener('deviceorientation', handleOrientation);
+        } else {
+          console.log('Device orientation permission denied');
+        }
+      } else {
+        window.addEventListener('deviceorientation', handleOrientation);
+      }
+    };
 
-    return () => window.removeEventListener('deviceorientation', handleOrientation);
+    if (active)
+      requestOrientationPermission();
+
+    return () => {
+      window.removeEventListener('deviceorientation', handleOrientation);
+    };
   }, []);
 
   useEffect(() => {
