@@ -33,6 +33,10 @@ interface CardProps {
   cards: CardType[];
 }
 
+type DeviceOrientationEventConstructor = typeof DeviceOrientationEvent & {
+  requestPermission?: () => Promise<'granted' | 'denied'>;
+};
+
 const Card = ({
   card,
   id,
@@ -64,27 +68,28 @@ const Card = ({
   const [orientation, setOrientation] = useState({ beta: 0, gamma: 0 })
 
   useEffect(() => {
+    const requestOrientationPermission = async (): Promise<void> => {
+      if (typeof DeviceOrientationEvent !== 'undefined') {
+        const DeviceOrientationEventTyped = DeviceOrientationEvent as DeviceOrientationEventConstructor;
 
-    function hasRequestPermission(obj: any): obj is { requestPermission: () => Promise<'granted' | 'denied'> } {
-      return obj && typeof obj.requestPermission === 'function';
-    }
-    const requestOrientationPermission = async () => {
-      if (typeof DeviceOrientationEvent !== 'undefined' && hasRequestPermission(DeviceOrientationEvent)) {
-        try {
-          const permission = await DeviceOrientationEvent.requestPermission();
-          if (permission === 'granted') {
-            console.log('Device orientation permission granted');
-          } else {
-            console.log('Device orientation permission denied');
+        if (typeof DeviceOrientationEventTyped.requestPermission === 'function') {
+          try {
+            const permission = await DeviceOrientationEventTyped.requestPermission();
+            if (permission === 'granted') {
+              console.log('Device orientation permission granted');
+            } else {
+              console.log('Device orientation permission denied');
+            }
+          } catch (error) {
+            console.error('Error requesting orientation permission:', error);
           }
-        } catch (error) {
-          console.error('Error requesting orientation permission:', error);
+        } else {
+          console.log('Permission not required or not supported');
         }
       } else {
-        console.log('Permission not required or not supported');
+        console.log('DeviceOrientationEvent is not supported');
       }
     };
-
     if (active) requestOrientationPermission();
 
     const handleOrientation = (event: DeviceOrientationEvent) => {
