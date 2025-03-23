@@ -85,7 +85,7 @@ const Card = ({
       window.addEventListener('deviceorientation', handleOrientation);
       return () => window.removeEventListener('deviceorientation', handleOrientation);
     }
-  }, [listenerActive]);
+  }, [listenerActive, setOrientation]);
 
   // MOUSE ROTATION
   useEffect(() => {
