@@ -31,7 +31,8 @@ interface CardProps {
   setActive: Dispatch<SetStateAction<number | null>>;
   isLoaded: boolean;
   cards: CardType[];
-  orientation: { beta: number | null; gamma: number | null }
+  orientation: { beta: number | null; gamma: number | null };
+  requestPermission: () => Promise<void>;
 }
 
 const Card = ({
@@ -41,7 +42,8 @@ const Card = ({
   active,
   setActive,
   cards,
-  orientation
+  orientation,
+  requestPermission
 }: CardProps) => {
   const groupRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
@@ -139,6 +141,7 @@ const Card = ({
 
   const click = async (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
+    await requestPermission();
     setActive(id);
   };
 

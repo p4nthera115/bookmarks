@@ -134,6 +134,7 @@ export default function Experience({ cardArr, active, setActive, isLoaded }: Exp
           isLoaded={isLoaded}
           cards={cardArr}
           orientation={orientation}
+          requestPermission={requestOrientationPermission}
         />
       )}
     </ScrollControls>
