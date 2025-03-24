@@ -9,7 +9,7 @@ High-Quality Illustrations – Showcasing the artwork on each side of a bookmark
 Smooth Transitions & Interactions – Designed to feel intuitive and engaging.
 Mobile-Optimized – Fully responsive layout for different devices.
 
-🛠️ Tech Stack  
+🛠️ Tech Stack
 Frontend: React, React Three Fiber
 Styling & Animations: Tailwind CSS, Motion
 Deployment: Vercel
