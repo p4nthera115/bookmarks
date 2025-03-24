@@ -8,7 +8,8 @@ Smooth Transitions & Interactions – Designed to feel intuitive and engaging.
 Mobile-Optimized – Fully responsive layout for different devices.
 
 🚀 Live Demo
-🔗 bookmarks-azure.vercel.app
+
+🔗 https://bookmarks-azure.vercel.app
 
 🛠️ Tech Stack
 Frontend: React, React Three Fiber
