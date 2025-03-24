@@ -8,7 +8,6 @@ Smooth Transitions & Interactions – Designed to feel intuitive and engaging.
 Mobile-Optimized – Fully responsive layout for different devices.
 
 🚀 Live Demo
-
 🔗 https://bookmarks-azure.vercel.app
 
 🛠️ Tech Stack
