@@ -31,12 +31,8 @@ interface CardProps {
   setActive: Dispatch<SetStateAction<number | null>>;
   isLoaded: boolean;
   cards: CardType[];
+  orientation: { beta: number | null; gamma: number | null }
 }
-
-type DeviceOrientationEventConstructor = typeof DeviceOrientationEvent & {
-  requestPermission?: () => Promise<'granted' | 'denied'>;
-};
-
 
 const Card = ({
   card,
@@ -44,8 +40,8 @@ const Card = ({
   index,
   active,
   setActive,
-  // isLoaded,
   cards,
+  orientation
 }: CardProps) => {
   const groupRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
@@ -66,26 +62,6 @@ const Card = ({
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const rotationRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
   const scroll = useScroll();
-  const [orientation, setOrientation] = useState<{ beta: number | null, gamma: number | null }>({ beta: null, gamma: null });
-  const [listenerActive, setListenerActive] = useState(false);
-
-  useEffect(() => {
-    if (typeof DeviceOrientationEvent === 'undefined' || !('requestPermission' in DeviceOrientationEvent)) {
-      setListenerActive(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (listenerActive) {
-      const handleOrientation = (event: DeviceOrientationEvent) => {
-        if (event.beta !== null && event.gamma !== null) {
-          setOrientation({ beta: event.beta, gamma: event.gamma });
-        }
-      };
-      window.addEventListener('deviceorientation', handleOrientation);
-      return () => window.removeEventListener('deviceorientation', handleOrientation);
-    }
-  }, [listenerActive, setOrientation]);
 
   // MOUSE ROTATION
   useEffect(() => {
@@ -161,34 +137,8 @@ const Card = ({
   const envMap = selectedVariant.foilColor === "gold" ? goldEnvMap : silverEnvMap;
   envMap.map.mapping = THREE.EquirectangularReflectionMapping;
 
-  // ORIENTATION PERMISSION
-  const requestOrientationPermission = async (): Promise<void> => {
-    if (typeof DeviceOrientationEvent !== 'undefined') {
-      const DeviceOrientationEventTyped = DeviceOrientationEvent as DeviceOrientationEventConstructor;
-
-      if (typeof DeviceOrientationEventTyped.requestPermission === 'function') {
-        try {
-          const permission = await DeviceOrientationEventTyped.requestPermission();
-          if (permission === 'granted') {
-            console.log('Device orientation permission granted');
-            setListenerActive(true)
-          } else {
-            console.log('Device orientation permission denied');
-          }
-        } catch (error) {
-          console.error('Error requesting orientation permission:', error);
-        }
-      } else {
-        console.log('Permission not required or not supported');
-      }
-      console.log('DeviceOrientationEvent is not supported');
-    }
-  }
-
-
   const click = async (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    requestOrientationPermission()
     setActive(id);
   };
 

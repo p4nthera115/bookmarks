@@ -29,3 +29,7 @@ type ColorVariant = {
     back: string
   }
 }
+
+export type DeviceOrientationEventConstructor = typeof DeviceOrientationEvent & {
+  requestPermission?: () => Promise<'granted' | 'denied'>;
+};

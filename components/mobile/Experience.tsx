@@ -1,9 +1,9 @@
 "use client"
 
-import { Dispatch, SetStateAction, useMemo, useRef } from "react"
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react"
 import Card from "./Card"
 import { ScrollControls } from "@react-three/drei"
-import { CardType } from "@/app/definitions"
+import { CardType, DeviceOrientationEventConstructor } from "@/app/definitions"
 import { useFrame, useThree } from "@react-three/fiber"
 import { easing } from "maath"
 import * as THREE from "three"
@@ -21,6 +21,47 @@ export default function Experience({ cardArr, active, setActive, isLoaded }: Exp
   const gradientCanvas = useRef(document.createElement("canvas"));
   const gradientTexture = useRef(new THREE.CanvasTexture(gradientCanvas.current));
   const ambientLightRef = useRef<THREE.AmbientLight | null>(null);
+  const [orientation, setOrientation] = useState<{ beta: number | null; gamma: number | null }>({
+    beta: null,
+    gamma: null,
+  });
+  const [listenerActive, setListenerActive] = useState(false);
+
+  const requestOrientationPermission = async () => {
+    if (typeof DeviceOrientationEvent !== "undefined") {
+      const DeviceOrientationEventTyped = DeviceOrientationEvent as DeviceOrientationEventConstructor;
+      if (typeof DeviceOrientationEventTyped.requestPermission === "function") {
+        try {
+          const permission = await DeviceOrientationEventTyped.requestPermission();
+          if (permission === "granted") {
+            setListenerActive(true);
+          }
+        } catch (error) {
+          console.error("Error requesting orientation permission:", error);
+        }
+      } else {
+        setListenerActive(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (active !== null && !listenerActive) {
+      requestOrientationPermission();
+    }
+  }, [active, listenerActive]);
+
+  useEffect(() => {
+    if (listenerActive) {
+      const handleOrientation = (event: DeviceOrientationEvent) => {
+        if (event.beta !== null && event.gamma !== null) {
+          setOrientation({ beta: event.beta, gamma: event.gamma });
+        }
+      };
+      window.addEventListener("deviceorientation", handleOrientation);
+      return () => window.removeEventListener("deviceorientation", handleOrientation);
+    }
+  }, [listenerActive]);
 
   useMemo(() => {
     gradientCanvas.current.width = 256;
@@ -39,6 +80,8 @@ export default function Experience({ cardArr, active, setActive, isLoaded }: Exp
     }
 
     const activeCard = cardArr.find((card) => card.id === active);
+
+    // BACKGROUND GRADIENT ANIMATION
     const selectedVariant =
       activeCard && active !== null
         ? activeCard.colorVariations[activeCard.selectedVariantIndex]
@@ -60,7 +103,7 @@ export default function Experience({ cardArr, active, setActive, isLoaded }: Exp
 
     gradientTexture.current.needsUpdate = true;
 
-    // Camera positioning
+    // CAMERA POSITIONING
     if (!isLoaded) {
       easing.damp3(state.camera.position, [state.camera.position.x, 20, 0], 2.0, delta);
     } else if (active) {
@@ -90,6 +133,7 @@ export default function Experience({ cardArr, active, setActive, isLoaded }: Exp
           setActive={setActive}
           isLoaded={isLoaded}
           cards={cardArr}
+          orientation={orientation}
         />
       )}
     </ScrollControls>
