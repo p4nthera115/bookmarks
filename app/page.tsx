@@ -174,7 +174,7 @@ export default function Home() {
           </p>
         ),
         link: "https://www.etsy.com/listing/1852677200/im-well-read-double-sided-mini-bookmark?ls=r&ref=hp_rv-1&content_source=53cd7b6815125246a52314c771e65a9273270ce1%253A1852677200&logging_key=53cd7b6815125246a52314c771e65a9273270ce1%3A1852677200",
-        inStock: true,
+        inStock: false,
         isFlipped: false,
         selectedVariantIndex: 0
 
