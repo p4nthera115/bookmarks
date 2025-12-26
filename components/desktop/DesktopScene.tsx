@@ -2,8 +2,19 @@ import { Canvas } from "@react-three/fiber"
 import Experience from "./Experience"
 import LoadingScreen from "./LoadingScreen"
 import ActiveUi from "./ActiveUi"
-import { Dispatch, SetStateAction } from "react"
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  useCallback,
+} from "react"
 import { CardType } from "@/app/definitions"
+import {
+  preloadTextures,
+  getEssentialTextureUrls,
+  LoadingProgress,
+} from "@/lib/textureLoader"
 
 interface DesktopSceneProps {
   cardArr: CardType[]
@@ -24,6 +35,25 @@ export default function DesktopScene({
   setIsLoaded,
   flipCard,
 }: DesktopSceneProps) {
+  const [loadingProgress, setLoadingProgress] = useState(0)
+  const [isPreloading, setIsPreloading] = useState(true)
+
+  // Preload essential textures on mount
+  useEffect(() => {
+    const preload = async () => {
+      const urls = getEssentialTextureUrls(cardArr, 9) // Preload first 5 cards
+      await preloadTextures(urls, (progress: LoadingProgress) => {
+        setLoadingProgress(progress.progress)
+      })
+      setIsPreloading(false)
+    }
+    preload()
+  }, [cardArr])
+
+  const handleLoaded = useCallback(() => {
+    setIsLoaded(true)
+  }, [setIsLoaded])
+
   return (
     <div className="h-full w-full">
       <ActiveUi
@@ -33,22 +63,27 @@ export default function DesktopScene({
         setCardArr={setCardArr}
         flipCard={flipCard}
       />
-      {!isLoaded && <LoadingScreen onLoaded={() => setIsLoaded(true)} />}
+      {!isLoaded && (
+        <LoadingScreen progress={loadingProgress} onLoaded={handleLoaded} />
+      )}
 
-      <Canvas
-        className="fixed z-20"
-        shadows
-        flat
-        dpr={[1, 1.5]}
-        camera={{ position: [0, 2, 8], fov: 30, near: 1, far: 30 }}
-      >
-        <Experience
-          cardArr={cardArr}
-          active={active}
-          setActive={setActive}
-          isLoaded={isLoaded}
-        />
-      </Canvas>
+      {/* Only render Canvas after preloading is complete to avoid blocking */}
+      {!isPreloading && (
+        <Canvas
+          className="fixed z-20"
+          shadows
+          flat
+          dpr={[1, 1.5]}
+          camera={{ position: [0, 2, 8], fov: 30, near: 1, far: 30 }}
+        >
+          <Experience
+            cardArr={cardArr}
+            active={active}
+            setActive={setActive}
+            isLoaded={isLoaded}
+          />
+        </Canvas>
+      )}
     </div>
   )
 }
