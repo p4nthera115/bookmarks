@@ -111,7 +111,7 @@ export default function LoadingScreen({
           style={{
             opacity: index < activeDivCount ? 1 : 0.1,
             rotate: shouldRotate ? "50deg" : "0deg",
-            transition: "opacity 0.3s ease-out, rotate 0.4s ease-out",
+            transition: "opacity 1s ease-out, rotate 0.4s ease-out",
           }}
         />
       ))}
