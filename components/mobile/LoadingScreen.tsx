@@ -95,24 +95,21 @@ export default function LoadingScreen({
   const activeDivCount =
     phase === "loading" ? Math.floor((displayProgress / 100) * 11) : 11 // All bars filled once loading phase is complete
 
-  const shouldRotate = phase === "rotating" || phase === "fading"
   const shouldFade = phase === "fading"
 
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center bg-white z-50 flex-row gap-[17px] ${
+      className={`fixed inset-0 flex items-center justify-center bg-white z-50 flex-col gap-4 ${
         shouldFade ? "opacity-0 pointer-events-none" : "opacity-100"
       } transition-opacity duration-700`}
     >
       {[...Array(11)].map((_, index) => (
         <div
           key={index}
-          className="h-10 w-[1px] bg-black"
+          className="h-px w-10 bg-black"
           style={{
             opacity: index < activeDivCount ? 1 : 0.1,
-            rotate: shouldRotate ? "50deg" : "0deg",
-            // transition: "opacity 0.3s ease-out, rotate 0.4s ease-out",
-            transition: "opacity 1s ease-out, rotate 0.4s ease-out 0.5s",
+            transition: "opacity 1s ease-out",
           }}
         />
       ))}
