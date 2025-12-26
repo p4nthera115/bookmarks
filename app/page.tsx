@@ -541,6 +541,12 @@ export default function Home() {
           flipCard={flipCard}
         />
       )}
+      {/* <a
+        href="https://www.x.com/p4nthera_"
+        target="_blank"
+        className="absolute bottom-0 right-0 m-2 text-black z-50 opacity-20 hover:opacity-70 transition text-sm">
+        @p4n
+      </a> */}
     </main>
   )
 }
