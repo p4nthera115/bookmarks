@@ -99,7 +99,7 @@ export default function LoadingScreen({
 
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center bg-white z-50 flex-col gap-2 ${
+      className={`fixed inset-0 flex items-center justify-center bg-white z-50 flex-col gap-4 ${
         shouldFade ? "opacity-0 pointer-events-none" : "opacity-100"
       } transition-opacity duration-700`}
     >
