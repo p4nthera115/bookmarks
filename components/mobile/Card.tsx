@@ -1,38 +1,79 @@
-"use client";
+"use client"
 
-import { useFrame, useLoader } from "@react-three/fiber";
-import { useRef, useMemo, useState, Dispatch, SetStateAction, useEffect } from "react";
-import * as THREE from "three";
-import { easing } from "maath";
-import { useTexture, Decal, useScroll } from "@react-three/drei";
-import { RGBELoader } from "three/examples/jsm/Addons.js";
-import { CardType } from "@/app/definitions";
+import { useFrame } from "@react-three/fiber"
+import {
+  useRef,
+  useMemo,
+  useState,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+} from "react"
+import * as THREE from "three"
+import { easing } from "maath"
+import { Decal, useScroll } from "@react-three/drei"
+import { CardType } from "@/app/definitions"
+import {
+  getCachedTexture,
+  getCachedHDR,
+  loadTexture,
+  loadHDR,
+  isTextureCached,
+} from "@/lib/textureLoader"
 
-const createRoundedRectShape = (width: number, height: number, radius: number): THREE.Shape => {
-  const shape = new THREE.Shape();
-  shape.moveTo(-width / 2, -height / 2 + radius);
-  shape.lineTo(-width / 2, height / 2 - radius);
-  shape.quadraticCurveTo(-width / 2, height / 2, -width / 2 + radius, height / 2);
-  shape.lineTo(width / 2 - radius, height / 2);
-  shape.quadraticCurveTo(width / 2, height / 2, width / 2, height / 2 - radius);
-  shape.lineTo(width / 2, -height / 2 + radius);
-  shape.quadraticCurveTo(width / 2, -height / 2, width / 2 - radius, -height / 2);
-  shape.lineTo(-width / 2 + radius, -height / 2);
-  shape.quadraticCurveTo(-width / 2, -height / 2, -width / 2, -height / 2 + radius);
-  return shape;
-};
+const createRoundedRectShape = (
+  width: number,
+  height: number,
+  radius: number
+): THREE.Shape => {
+  const shape = new THREE.Shape()
+  shape.moveTo(-width / 2, -height / 2 + radius)
+  shape.lineTo(-width / 2, height / 2 - radius)
+  shape.quadraticCurveTo(
+    -width / 2,
+    height / 2,
+    -width / 2 + radius,
+    height / 2
+  )
+  shape.lineTo(width / 2 - radius, height / 2)
+  shape.quadraticCurveTo(width / 2, height / 2, width / 2, height / 2 - radius)
+  shape.lineTo(width / 2, -height / 2 + radius)
+  shape.quadraticCurveTo(
+    width / 2,
+    -height / 2,
+    width / 2 - radius,
+    -height / 2
+  )
+  shape.lineTo(-width / 2 + radius, -height / 2)
+  shape.quadraticCurveTo(
+    -width / 2,
+    -height / 2,
+    -width / 2,
+    -height / 2 + radius
+  )
+  return shape
+}
 
 interface CardProps {
-  card: CardType;
-  id: number;
-  index: number;
-  cardPos: number;
-  active: number | null;
-  setActive: Dispatch<SetStateAction<number | null>>;
-  isLoaded: boolean;
-  cards: CardType[];
-  orientation: { beta: number | null; gamma: number | null };
-  requestPermission: () => Promise<void>;
+  card: CardType
+  id: number
+  index: number
+  cardPos: number
+  active: number | null
+  setActive: Dispatch<SetStateAction<number | null>>
+  isLoaded: boolean
+  cards: CardType[]
+  orientation: { beta: number | null; gamma: number | null }
+  requestPermission: () => Promise<void>
+}
+
+interface CardTextures {
+  frontIllustration: THREE.Texture | null
+  backIllustration: THREE.Texture | null
+  frontFoil: THREE.Texture | null
+  backFoil: THREE.Texture | null
+  frontNormal: THREE.Texture | null
+  backNormal: THREE.Texture | null
 }
 
 const Card = ({
@@ -43,173 +84,288 @@ const Card = ({
   setActive,
   cards,
   orientation,
-  requestPermission
+  requestPermission,
 }: CardProps) => {
-  const groupRef = useRef<THREE.Group>(null);
-  const meshRef = useRef<THREE.Mesh>(null);
-  const roundedRectShape = createRoundedRectShape(1.0, 1.75, 0.1);
-  const geometry = new THREE.ExtrudeGeometry(roundedRectShape, { depth: 0.02, bevelEnabled: false });
+  const [texturesLoaded, setTexturesLoaded] = useState(false)
+  const [textures, setTextures] = useState<CardTextures>({
+    frontIllustration: null,
+    backIllustration: null,
+    frontFoil: null,
+    backFoil: null,
+    frontNormal: null,
+    backNormal: null,
+  })
+  const [goldEnvMap, setGoldEnvMap] = useState<THREE.DataTexture | null>(null)
+  const [silverEnvMap, setSilverEnvMap] = useState<THREE.DataTexture | null>(
+    null
+  )
+
+  const groupRef = useRef<THREE.Group>(null)
+  const meshRef = useRef<THREE.Mesh>(null)
+  const roundedRectShape = createRoundedRectShape(1.0, 1.75, 0.1)
+  const geometry = useMemo(
+    () =>
+      new THREE.ExtrudeGeometry(roundedRectShape, {
+        depth: 0.02,
+        bevelEnabled: false,
+      }),
+    [roundedRectShape]
+  )
   const planeGeometry = useMemo(() => {
-    const shape = createRoundedRectShape(1.0, 1.75, 0.1);
-    const geo = new THREE.ShapeGeometry(shape, 32);
-    geo.computeVertexNormals();
-    const uvs = geo.attributes.uv.array;
+    const shape = createRoundedRectShape(1.0, 1.75, 0.1)
+    const geo = new THREE.ShapeGeometry(shape, 32)
+    geo.computeVertexNormals()
+    const uvs = geo.attributes.uv.array
     for (let i = 0; i < uvs.length; i += 2) {
-      uvs[i] = (uvs[i] + 0.5) * (1.0 / 1.0);
-      uvs[i + 1] = (uvs[i + 1] + 0.875) * (1.0 / 1.75);
+      uvs[i] = (uvs[i] + 0.5) * (1.0 / 1.0)
+      uvs[i + 1] = (uvs[i + 1] + 0.875) * (1.0 / 1.75)
     }
-    geo.attributes.uv.needsUpdate = true;
-    return geo;
-  }, []);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const rotationRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
-  const scroll = useScroll();
+    geo.attributes.uv.needsUpdate = true
+    return geo
+  }, [])
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const rotationRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0))
+  const scroll = useScroll()
 
   // MOUSE ROTATION
   useEffect(() => {
     const pointerMove = (e: MouseEvent) => {
       if (active === id) {
-        const x = (e.clientX / window.innerWidth) * 2 - 1;
-        const y = -(e.clientY / window.innerHeight) * 2 + 1;
-        setMousePos({ x, y });
+        const x = (e.clientX / window.innerWidth) * 2 - 1
+        const y = -(e.clientY / window.innerHeight) * 2 + 1
+        setMousePos({ x, y })
       }
-    };
-    window.addEventListener("mousemove", pointerMove);
-    return () => window.removeEventListener("mousemove", pointerMove);
-  }, [active, id]);
+    }
+    window.addEventListener("mousemove", pointerMove)
+    return () => window.removeEventListener("mousemove", pointerMove)
+  }, [active, id])
 
   // POSITIONING
-  const spacing = 1.75 / 2;
-  const focusZ = 5;
-  const elevationThreshold = 0.6;
-  const elevationHeight = 0.7;
+  const spacing = 1.75 / 2
+  const focusZ = 5
+  const elevationThreshold = 0.6
+  const elevationHeight = 0.7
 
-  const initialPos = useMemo(() => new THREE.Vector3(0, 0, index * spacing), [index, spacing]);
+  const initialPos = useMemo(
+    () => new THREE.Vector3(0, 0, index * spacing),
+    [index, spacing]
+  )
 
   // TEXTURES
-  const selectedVariant = card.colorVariations[card.selectedVariantIndex];
-  const defaultTexturePath = '/bookmark.png';
+  const selectedVariant = card.colorVariations[card.selectedVariantIndex]
 
-  const allTexturePaths = [
-    selectedVariant.illustration.front || defaultTexturePath,
-    selectedVariant.illustration.back || defaultTexturePath,
-    card.foil.front || defaultTexturePath,
-    card.foil.back || defaultTexturePath,
-    card.normalMap.front || defaultTexturePath,
-    card.normalMap.back || defaultTexturePath,
-  ];
+  // Load textures lazily using our cached loader
+  useEffect(() => {
+    let mounted = true
 
-  const [
-    frontIllustrationTex,
-    backIllustrationTex,
-    frontFoilTex,
-    backFoilTex,
-    frontNormalTex,
-    backNormalTex,
-  ] = useTexture(allTexturePaths);
+    const loadCardTextures = async () => {
+      const texturePaths = {
+        frontIllustration: selectedVariant.illustration.front,
+        backIllustration: selectedVariant.illustration.back,
+        frontFoil: card.foil.front,
+        backFoil: card.foil.back,
+        frontNormal: card.normalMap.front,
+        backNormal: card.normalMap.back,
+      }
 
-  [frontIllustrationTex, backIllustrationTex, frontFoilTex, backFoilTex, frontNormalTex, backNormalTex].forEach(tex => {
-    if (tex) {
-      tex.minFilter = THREE.LinearFilter;
-      tex.magFilter = THREE.LinearFilter;
-      tex.anisotropy = 16;
-      tex.generateMipmaps = true;
+      const loadedTextures: CardTextures = {
+        frontIllustration: null,
+        backIllustration: null,
+        frontFoil: null,
+        backFoil: null,
+        frontNormal: null,
+        backNormal: null,
+      }
+
+      // Try to get cached textures first, then load if needed
+      for (const [key, path] of Object.entries(texturePaths)) {
+        if (path) {
+          let texture = getCachedTexture(path)
+          if (!texture) {
+            try {
+              texture = await loadTexture(path)
+            } catch (e) {
+              console.warn(`Failed to load texture: ${path}`, e)
+            }
+          }
+          if (texture && mounted) {
+            loadedTextures[key as keyof CardTextures] = texture
+          }
+        }
+      }
+
+      // Load HDR environment maps
+      const goldPath = "/pretville_cinema_1k.hdr"
+      const silverPath = "/st_peters_square_night_1k.hdr"
+
+      let goldHdr = getCachedHDR(goldPath)
+      if (!goldHdr) {
+        try {
+          goldHdr = await loadHDR(goldPath)
+        } catch (e) {
+          console.warn("Failed to load gold HDR", e)
+        }
+      }
+
+      let silverHdr = getCachedHDR(silverPath)
+      if (!silverHdr) {
+        try {
+          silverHdr = await loadHDR(silverPath)
+        } catch (e) {
+          console.warn("Failed to load silver HDR", e)
+        }
+      }
+
+      if (mounted) {
+        setTextures(loadedTextures)
+        setGoldEnvMap(goldHdr)
+        setSilverEnvMap(silverHdr)
+        setTexturesLoaded(true)
+      }
     }
-  });
 
-  const frontIllustration = selectedVariant.illustration.front ? frontIllustrationTex : null;
-  const backIllustration = selectedVariant.illustration.back ? backIllustrationTex : null;
-  const frontFoil = card.foil.front ? frontFoilTex : null;
-  const backFoil = card.foil.back ? backFoilTex : null;
-  const frontNormal = card.normalMap.front ? frontNormalTex : null;
-  const backNormal = card.normalMap.back ? backNormalTex : null;
+    // Check if textures are already cached
+    const allPaths = [
+      selectedVariant.illustration.front,
+      selectedVariant.illustration.back,
+      card.foil.front,
+      card.foil.back,
+      card.normalMap.front,
+      card.normalMap.back,
+    ].filter(Boolean)
 
-  const goldEnvMap = {
-    map: useLoader(RGBELoader, "/pretville_cinema_1k.hdr"),
-    rotation: new THREE.Euler(0.4, 0, 0.1),
-    intensity: 3,
-  };
+    const allCached = allPaths.every((path) => isTextureCached(path))
 
-  const silverEnvMap = {
-    map: useLoader(RGBELoader, "/st_peters_square_night_1k.hdr"),
-    rotation: new THREE.Euler(-0.3, 0.3, 1.2),
-    intensity: 4,
-  };
+    if (allCached) {
+      // Textures are cached, load them immediately
+      loadCardTextures()
+    } else {
+      // Textures not cached, load them
+      loadCardTextures()
+    }
 
-  const envMap = selectedVariant.foilColor === "gold" ? goldEnvMap : silverEnvMap;
-  envMap.map.mapping = THREE.EquirectangularReflectionMapping;
+    return () => {
+      mounted = false
+    }
+  }, [selectedVariant, card.foil, card.normalMap])
+
+  const envMap = useMemo(() => {
+    const map = selectedVariant.foilColor === "gold" ? goldEnvMap : silverEnvMap
+    if (!map) return null
+
+    return {
+      map,
+      rotation:
+        selectedVariant.foilColor === "gold"
+          ? new THREE.Euler(0.4, 0, 0.1)
+          : new THREE.Euler(-0.3, 0.3, 1.2),
+      intensity: selectedVariant.foilColor === "gold" ? 3 : 4,
+    }
+  }, [selectedVariant.foilColor, goldEnvMap, silverEnvMap])
 
   const click = async (e: { stopPropagation: () => void }) => {
-    e.stopPropagation();
-    await requestPermission();
-    setActive(id);
-  };
+    e.stopPropagation()
+    await requestPermission()
+    setActive(id)
+  }
 
   useFrame((state, delta) => {
-    if (!groupRef.current) return;
+    if (!groupRef.current) return
 
-    const N = cards.length;
-    const focusedIndex = scroll.offset * (N - 1);
-    const spacing = active ? 20 : 1.75 / 2;
-    const targetZ = 5 + (index - focusedIndex) * spacing;
-    const distanceFromFocus = Math.abs(targetZ - focusZ);
-    const elevationFactor = Math.max(0, 1 - distanceFromFocus / elevationThreshold);
-    const targetY = elevationHeight * elevationFactor + 0.5;
+    const N = cards.length
+    const focusedIndex = scroll.offset * (N - 1)
+    const spacingVal = active ? 20 : 1.75 / 2
+    const targetZ = 5 + (index - focusedIndex) * spacingVal
+    const distanceFromFocus = Math.abs(targetZ - focusZ)
+    const elevationFactor = Math.max(
+      0,
+      1 - distanceFromFocus / elevationThreshold
+    )
+    const targetY = elevationHeight * elevationFactor + 0.5
 
-    let targetPosition: [number, number, number];
-    let smoothTime: number;
-    let targetRotation: [number, number, number];
-    let intensity: number;
+    let targetPosition: [number, number, number]
+    let smoothTime: number
+    let targetRotation: [number, number, number]
+    let intensity: number
 
     if (active !== null) {
-      const activeIndex = cards.findIndex(card => card.id === active);
+      const activeIndex = cards.findIndex((c) => c.id === active)
 
       if (index === activeIndex) {
-        targetPosition = [0, 4.5, -0.055];
-        smoothTime = 0.35;
-        intensity = 0.25;
+        targetPosition = [0, 4.5, -0.055]
+        smoothTime = 0.35
+        intensity = 0.25
 
-        let rotationX, rotationY;
-        if (orientation.beta !== null && orientation.gamma !== null && window.innerWidth < 500) {
-          rotationX = -(orientation.beta - 45) * (Math.PI / 180) * 0.4;
-          rotationY = orientation.gamma * (Math.PI / 180);
+        let rotationX, rotationY
+        if (
+          orientation.beta !== null &&
+          orientation.gamma !== null &&
+          window.innerWidth < 500
+        ) {
+          rotationX = -(orientation.beta - 45) * (Math.PI / 180) * 0.4
+          rotationY = orientation.gamma * (Math.PI / 180)
         } else {
-          rotationX = mousePos.y * intensity;
-          rotationY = mousePos.x * intensity;
+          rotationX = mousePos.y * intensity
+          rotationY = mousePos.x * intensity
         }
         targetRotation = [
           -Math.PI / 2 - rotationX,
           card.isFlipped ? rotationY + Math.PI : rotationY,
           0,
-        ];
+        ]
       } else if (index === activeIndex - 1) {
-        targetPosition = [-5, 4.5, -0.055];
-        smoothTime = 0.35;
-        targetRotation = [0, 0, 0];
+        targetPosition = [-5, 4.5, -0.055]
+        smoothTime = 0.35
+        targetRotation = [0, 0, 0]
       } else if (index === activeIndex + 1) {
-        targetPosition = [5, 4.5, -0.055];
-        smoothTime = 0.35;
-        targetRotation = [0, 0, 0];
+        targetPosition = [5, 4.5, -0.055]
+        smoothTime = 0.35
+        targetRotation = [0, 0, 0]
       } else {
-        targetPosition = [(index - activeIndex) * 5, 4.5, -0.055];
-        smoothTime = 0.15;
-        targetRotation = [0, 0, 0];
-        groupRef.current.visible = false;
-        easing.damp3(groupRef.current.position, targetPosition, smoothTime, delta);
-        return;
+        targetPosition = [(index - activeIndex) * 5, 4.5, -0.055]
+        smoothTime = 0.15
+        targetRotation = [0, 0, 0]
+        groupRef.current.visible = false
+        easing.damp3(
+          groupRef.current.position,
+          targetPosition,
+          smoothTime,
+          delta
+        )
+        return
       }
-      groupRef.current.visible = true;
+      groupRef.current.visible = true
     } else {
-      targetPosition = [0, targetY, targetZ];
-      smoothTime = 0.15;
-      targetRotation = [0, 0, 0];
-      groupRef.current.visible = true;
+      targetPosition = [0, targetY, targetZ]
+      smoothTime = 0.15
+      targetRotation = [0, 0, 0]
+      groupRef.current.visible = true
     }
 
-    easing.damp3(groupRef.current.position, targetPosition, smoothTime, delta);
-    easing.damp3(rotationRef.current, targetRotation, active ? 0.35 : 0.265, delta);
-    groupRef.current.rotation.set(rotationRef.current.x, rotationRef.current.y, rotationRef.current.z);
-  });
+    easing.damp3(groupRef.current.position, targetPosition, smoothTime, delta)
+    easing.damp3(
+      rotationRef.current,
+      targetRotation,
+      active ? 0.35 : 0.265,
+      delta
+    )
+    groupRef.current.rotation.set(
+      rotationRef.current.x,
+      rotationRef.current.y,
+      rotationRef.current.z
+    )
+  })
+
+  // Don't render full card if textures aren't loaded yet
+  if (!texturesLoaded) {
+    return (
+      <group ref={groupRef} position={initialPos} rotation={[0, 0.7, 0]}>
+        <mesh geometry={geometry} receiveShadow castShadow>
+          <meshPhysicalMaterial color={selectedVariant.cardColor} opacity={1} />
+        </mesh>
+      </group>
+    )
+  }
 
   return (
     <group ref={groupRef} position={initialPos} rotation={[0, 0.7, 0]}>
@@ -224,8 +380,8 @@ const Card = ({
         <meshPhysicalMaterial color={selectedVariant.cardColor} opacity={1} />
 
         {/* FRONT ILLUSTRATION */}
-        {frontIllustration ? (
-          card.name === "Protagonist/Antagonist" ? (
+        {textures.frontIllustration &&
+          (card.name === "Protagonist/Antagonist" ? (
             <Decal
               receiveShadow={active ? false : true}
               position={[0, 0, 0.1]}
@@ -235,7 +391,7 @@ const Card = ({
               <meshPhysicalMaterial
                 polygonOffset
                 polygonOffsetFactor={-1}
-                map={frontIllustration}
+                map={textures.frontIllustration}
                 roughness={0.9}
                 metalness={0.1}
                 side={THREE.DoubleSide}
@@ -250,17 +406,16 @@ const Card = ({
               <meshPhysicalMaterial
                 polygonOffset
                 polygonOffsetFactor={-1}
-                map={frontIllustration}
+                map={textures.frontIllustration}
                 roughness={0.9}
                 metalness={0.1}
                 side={THREE.DoubleSide}
               />
             </Decal>
-          )
-        ) : null}
+          ))}
 
         {/* BACK ILLUSTRATION */}
-        {backIllustration ? (
+        {textures.backIllustration && (
           <Decal
             receiveShadow={active ? false : true}
             position={[0, 0, -0.04]}
@@ -270,17 +425,17 @@ const Card = ({
             <meshPhysicalMaterial
               polygonOffset
               polygonOffsetFactor={-1}
-              map={backIllustration}
+              map={textures.backIllustration}
               roughness={0.9}
               metalness={0.1}
               side={THREE.DoubleSide}
             />
           </Decal>
-        ) : null}
+        )}
       </mesh>
 
       {/* FRONT FOIL */}
-      {frontFoil ? (
+      {textures.frontFoil && envMap && (
         <mesh geometry={planeGeometry} position={[0, 0, 0.03]}>
           <meshPhysicalMaterial
             transparent
@@ -288,19 +443,23 @@ const Card = ({
             metalness={0.8}
             reflectivity={0.8}
             sheen={1}
-            map={frontFoil}
-            normalMap={frontNormal}
+            map={textures.frontFoil}
+            normalMap={textures.frontNormal}
             normalScale={new THREE.Vector2(0.1, 0.1)}
             envMap={envMap.map}
             envMapIntensity={envMap.intensity}
             envMapRotation={envMap.rotation}
           />
         </mesh>
-      ) : null}
+      )}
 
       {/* BACK FOIL */}
-      {backFoil ? (
-        <mesh geometry={planeGeometry} rotation={[0, Math.PI, 0]} position={[0, 0, -0.01]}>
+      {textures.backFoil && envMap && (
+        <mesh
+          geometry={planeGeometry}
+          rotation={[0, Math.PI, 0]}
+          position={[0, 0, -0.01]}
+        >
           <meshPhysicalMaterial
             side={THREE.DoubleSide}
             transparent
@@ -308,17 +467,17 @@ const Card = ({
             metalness={0.8}
             reflectivity={0.8}
             sheen={1}
-            map={backFoil}
-            normalMap={backNormal}
+            map={textures.backFoil}
+            normalMap={textures.backNormal}
             normalScale={new THREE.Vector2(0.1, 0.1)}
             envMap={envMap.map}
             envMapIntensity={envMap.intensity}
             envMapRotation={envMap.rotation}
           />
         </mesh>
-      ) : null}
+      )}
     </group>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card
